@@ -163,7 +163,7 @@ class MainWindow(wx.Frame):
         # panel.Layout()
         # panel.Show(True)
 
-    def __load_db(self):
+    def __load_db(self, event):
         dialog = wx.FileDialog(
             self,
             "Open",
@@ -179,7 +179,7 @@ class MainWindow(wx.Frame):
         self.__database = database.Database(path)
 
     def __select_supplier(self, event):
-        item = self.__SUPPLIERS.keys()[event.GetSelection()]
+        item = tuple(self.__SUPPLIERS.keys())[event.GetSelection()]
         if item:
             self.__supplier_store = self.__SUPPLIERS[item]
             self.__parse_store_button.Enable()
