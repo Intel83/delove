@@ -1,4 +1,5 @@
 .idea/
+venv/
 test_input/
 *.csv
 *.xls
