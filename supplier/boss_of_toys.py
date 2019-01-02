@@ -1,5 +1,5 @@
 import re
-from supplier import Supplier
+from .supplier import Supplier
 
 
 class Boss(Supplier):
@@ -10,11 +10,12 @@ class Boss(Supplier):
         Supplier.__init__(self)
 
     def load(self, input_file):
+        data = None
         try:
             with open(input_file, "r") as handle:
                 data = handle.read()
         except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            print("I/O error({0}): {1}".format(e.errno, e.strerror))
         for product in self.__RGX_PRODUCT.findall(data):
             new_product = {}
             for field in self.__RGX_FIELD.findall(product):
@@ -27,4 +28,4 @@ class Boss(Supplier):
             if (code, ean) not in self._store.keys():
                 self._store[(code, ean)] = new_product
             else:
-                print "Zdublowany kod: {}".format((code, ean))
+                print("Zdublowany kod: {}".format((code, ean)))

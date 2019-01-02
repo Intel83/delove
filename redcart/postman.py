@@ -1,6 +1,6 @@
 import simplejson as json
-import urllib
-import urllib2
+import urllib.parse
+import urllib.request
 
 
 class Postman:
@@ -14,8 +14,8 @@ class Postman:
         content['key'] = self.__artur_key
         content['viewType'] = self.__view_type
         json_data = {self.__view_type: json.dumps(content)}
-        post_data = urllib.urlencode(json_data)
-        req = urllib2.Request(self.__request_address, post_data)
-        opener = urllib2.build_opener()
+        post_data = urllib.parse.urlencode(json_data)
+        req = urllib.request.Request(self.__request_address, post_data)
+        opener = urllib.request.build_opener()
         f = opener.open(req)
         self.__result = json.load(f)

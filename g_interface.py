@@ -163,14 +163,14 @@ class MainWindow(wx.Frame):
         # panel.Layout()
         # panel.Show(True)
 
-    def __load_db(self, event):
+    def __load_db(self):
         dialog = wx.FileDialog(
             self,
             "Open",
             os.getcwd(),
             "",
             "Pliki bazy danych (*.csv)|*.csv",
-            wx.FD_OPEN | wx.FILE_MUST_EXIST
+            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
         )
         dialog.ShowModal()
         path = dialog.GetPath()
@@ -191,13 +191,13 @@ class MainWindow(wx.Frame):
             os.getcwd(),
             "",
             "Pliki dostawcow (*.{0})|*.{0}".format(self.__supplier_store.FILETYPE),
-            wx.FD_OPEN | wx.FILE_MUST_EXIST
+            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
         )
         dialog.ShowModal()
         try:
             self.__supplier_store.load(dialog.GetPath())
-        except:
-            print "Blad ladowania pliku dostawcy"
+        except IOError:
+            print("Blad ladowania pliku dostawcy")
         finally:
             dialog.Destroy()
             self.__supplier_store.test_store()

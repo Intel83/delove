@@ -1,25 +1,26 @@
 import re
 import xlrd
-from supplier import Supplier
+from .supplier import Supplier
 
 
 class Obsessive(Supplier):
     FILETYPE = "xls"
     __CODEPAGE = "utf-8"
-    __LP_RGX = re.compile('.*Lp\..*', re.I)
+    __LP_RGX = re.compile(r'.*Lp\..*', re.I)
 
     def __init__(self):
         Supplier.__init__(self)
         self._store = list()
 
     def load(self, input_file):
+        workbook = None
         try:
             workbook = xlrd.open_workbook(input_file, encoding_override=self.__CODEPAGE)
         except UnicodeDecodeError:
-            print "Unicode decoding error caught"
+            print("Unicode decoding error caught")
             # sys.exit(1)
-        except:
-            print "Nie mozna odczytac XLS"
+        except IOError:
+            print("Nie mozna odczytac XLS")
         sheet = workbook.sheet_by_index(0)
         data_pending = False
         key_row_idx = None

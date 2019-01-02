@@ -1,4 +1,4 @@
-import postman as pm
+from . import postman as pm
 
 
 class Product:
@@ -31,4 +31,3 @@ class Product:
             }
         }
         self.__send_query(query)
-

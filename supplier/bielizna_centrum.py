@@ -1,10 +1,10 @@
 import re
-from supplier import Supplier
+from .supplier import Supplier
 
 
 class BC(Supplier):
     __RGX = {
-        'id': re.compile('<id>(\d+)</id>'),
+        'id': re.compile(r'<id>(\d+)</id>'),
         'name': re.compile('<name>(.+)</name>'),
         'category': re.compile('<category>(.+)</category>'),
         'category_path': re.compile('<categoryPath>(.+)</categoryPath>'),
@@ -25,7 +25,7 @@ class BC(Supplier):
     __RGX_details = re.compile('color="(.+?)" rozmiar="(.+?)" onstock="(.+?)"')
 
     __RGX_neglect = {
-        'header': re.compile('<\?xml version'),
+        'header': re.compile(r'<\?xml version'),
         'footer': re.compile('</offers>')
     }
     __RGX_begin = re.compile('<offer>')
@@ -46,7 +46,7 @@ class BC(Supplier):
                 if self.__RGX_begin.search(line):
                     new_product = dict()
                     continue
-                for product_property, property_value in self.__RGX.iteritems():
+                for product_property, property_value in self.__RGX.items():
                     match_object = property_value.search(line)
                     if not match_object:
                         continue

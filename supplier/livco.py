@@ -1,11 +1,11 @@
 import re
-from supplier import Supplier
+from .supplier import Supplier
 
 
 class Livco(Supplier):
     __RGX_PRODUCT = re.compile("<produkt>(.*?)</produkt>", re.DOTALL)
     __RGX_VARIANT = re.compile("<wariant>(.*?)</wariant>", re.DOTALL)
-    __RGX_PRODUCT_ID = re.compile("<id>(\d+?)</id>")
+    __RGX_PRODUCT_ID = re.compile(r"<id>(\d+?)</id>")
     __RGX_MAIN_FIELD = re.compile(r"<(.+?)><!\[CDATA\[(.*?)]]></\1>")
     __RGX_VARIANT_FIELD = re.compile(r"<(.+?)>(.*?)</\1>")
 
@@ -20,11 +20,12 @@ class Livco(Supplier):
         self.__counter = 0
 
     def load(self, input_file):
+        data = None
         try:
             with open(input_file, 'r') as stream:
                 data = stream.read()
         except IOError as e:
-            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            print("I/O error({0}): {1}".format(e.errno, e.strerror))
         for product in self.__RGX_PRODUCT.findall(data):
             new_product = dict()
             new_product["id"] = self.__RGX_PRODUCT_ID.search(product).group(1)
@@ -44,4 +45,4 @@ class Livco(Supplier):
             self._store[new_product["id"]] = new_product
 
     def test_store(self):
-        print "Wykryto {} produktow w {} wariantach".format(len(self._store), self.__counter)
+        print("Wykryto {} produktow w {} wariantach".format(len(self._store), self.__counter))
