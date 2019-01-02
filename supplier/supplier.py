@@ -11,5 +11,5 @@ class Supplier:
         return self._store
 
     def test_store(self):
-        print "Wykryto {} wpisow".format(len(self._store))
+        print("Wykryto {} wpisow".format(len(self._store)))
         return True
