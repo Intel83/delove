@@ -24,7 +24,11 @@ class Orion(Supplier):
     def load(self, input_file):
         data = None
         try:
-            with open(input_file, "r") as handle:
+            with open(
+                    input_file,
+                    "r",
+                    encoding="utf8"
+            ) as handle:
                 data = handle.read()
         except IOError as e:
             print("I/O error({0}): {1}".format(e.errno, e.strerror))
@@ -43,7 +47,7 @@ class Orion(Supplier):
     def test_store(self):
         counter = 0
         try:
-            for ean, fields in self._store.iteritems():
+            for ean, fields in self._store.items():
                 counter += 1
                 if ean == "" or any([field for field in fields if field == ""]):
                     print("zly wpis dla EAN: {}".format(ean))
