@@ -17,6 +17,12 @@ class Orion(Supplier):
     }
     __RGX_ATTR = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __RGX_VALUE = re.compile("<value </value>")
+    _PREFIX_CODE = "10"
+    _CONVERSION_MAP = (
+        "product-id",
+        "ean-code",
+        "availability"
+    )
 
     def __init__(self):
         Supplier.__init__(self)
@@ -51,7 +57,9 @@ class Orion(Supplier):
                 counter += 1
                 if ean == "" or any([field for field in fields if field == ""]):
                     print("zly wpis dla EAN: {}".format(ean))
+            return True
         except KeyError:
             print("zly wpis {}".format(counter))
+            return False
         finally:
             print("Sprawdzono {} wpisow".format(counter))

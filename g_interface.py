@@ -1,7 +1,8 @@
 import os
 import wx
-import database
+# import database
 # from redcart import products
+from store_own.product_own import Product
 from supplier import obsessive as obs
 from supplier import bielizna_centrum as bc
 from supplier import orion as ori
@@ -23,6 +24,7 @@ class MainWindow(wx.Frame):
         "Orion": ori.Orion(),
         "Livco": liv.Livco()
     }
+    __database = list()
 
     def __init__(self, title):
         self.__database = None
@@ -67,33 +69,33 @@ class MainWindow(wx.Frame):
         hsizers = []
 
         # Horizontal Sizer 1
-        hs = wx.BoxSizer(wx.HORIZONTAL)
+        # hs = wx.BoxSizer(wx.HORIZONTAL)
         # ladowanie bazy danych
-        db_button = wx.Button(
-            panel,
-            1,
-            self.__OWN_DB
-        )
-        self.__db_label = wx.StaticText(
-            panel,
-            label=""
-        )
-        db_button.Bind(
-            wx.EVT_BUTTON,
-            self.__load_db
-        )
-        hs.Add(
-            db_button,
-            0,
-            wx.LEFT,
-            10
-        )
-        hs.Add(
-            self.__db_label,
-            0,
-            wx.LEFT
-        )
-        hsizers.append(hs)
+        # db_button = wx.Button(
+        #     panel,
+        #     1,
+        #     self.__OWN_DB
+        # )
+        # self.__db_label = wx.StaticText(
+        #     panel,
+        #     label=""
+        # )
+        # db_button.Bind(
+        #     wx.EVT_BUTTON,
+        #     self.__load_db
+        # )
+        # hs.Add(
+        #     db_button,
+        #     0,
+        #     wx.LEFT,
+        #     10
+        # )
+        # hs.Add(
+        #     self.__db_label,
+        #     0,
+        #     wx.LEFT
+        # )
+        # hsizers.append(hs)
 
         # Horizontal Sizer 2
         hs = wx.BoxSizer(wx.HORIZONTAL)
@@ -163,20 +165,20 @@ class MainWindow(wx.Frame):
         # panel.Layout()
         # panel.Show(True)
 
-    def __load_db(self, event):
-        dialog = wx.FileDialog(
-            self,
-            "Open",
-            os.getcwd(),
-            "",
-            "Pliki bazy danych (*.csv)|*.csv",
-            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
-        )
-        dialog.ShowModal()
-        path = dialog.GetPath()
-        dialog.Destroy()
-        self.__db_label.SetLabel(path)
-        self.__database = database.Database(path)
+    # def __load_db(self, event):
+    #     dialog = wx.FileDialog(
+    #         self,
+    #         "Open",
+    #         os.getcwd(),
+    #         "",
+    #         "Pliki bazy danych (*.csv)|*.csv",
+    #         wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+    #     )
+    #     dialog.ShowModal()
+    #     path = dialog.GetPath()
+    #     dialog.Destroy()
+    #     self.__db_label.SetLabel(path)
+    #     self.__database = database.Database(path)
 
     def __select_supplier(self, event):
         item = tuple(self.__SUPPLIERS.keys())[event.GetSelection()]
@@ -200,7 +202,16 @@ class MainWindow(wx.Frame):
             print("Blad ladowania pliku dostawcy")
         finally:
             dialog.Destroy()
-            self.__supplier_store.test_store()
+            if self.__supplier_store.test_store():
+                c_map = self.__supplier_store.get_conv_map()
+                for prod_ean, prod_fields in self.__supplier_store.get_store().items():
+                    code = "{}-{}".format(self.__supplier_store.get_prefix(), prod_fields[c_map[0]])
+                    ean = prod_fields[c_map[1]]
+                    is_available = prod_fields[c_map[2]]
+                    quant = "100" if is_available else "0"
+                    avail = "Dostępny" if is_available else "Zapytaj o dostępność"
+                    date = "Do 7 dni" if is_available else "Brak informacji"
+                    self.__database += Product(code, ean, quant, avail, date)
 
     def __on_exit(self, event):
         self.Close(True)
