@@ -1,10 +1,13 @@
+from collections import OrderedDict
+
+
 class Supplier:
     FILETYPE = "xml"
     _CONVERSION_MAP = tuple()
     _PREFIX_CODE = ""
 
     def __init__(self):
-        self._store = {}
+        self._store = OrderedDict()
 
     def load(self, input_file):
         pass

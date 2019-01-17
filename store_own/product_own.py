@@ -1,12 +1,3 @@
-"""
-< Produkt >
-< Nr_katalogowy_cechy > <![CDATA[10 - 26405381021]] > < / Nr_katalogowy_cechy > // klucz główny
-< Kod_ean_cechy > <![CDATA[4024144130061]] > < / Kod_ean_cechy >                // klucz główny(Boss)
-< Ilosc_produktow > 100.00 < / Ilosc_produktow >
-< Dostepnosc > <![CDATA[AUTOMATYCZNY]] > < / Dostepnosc >
-< Termin_wysylki > <![CDATA[do 7 dni]] > < / Termin_wysylki >
-< / Produkt >
-"""
 from collections import OrderedDict
 
 
@@ -31,6 +22,7 @@ class Product:
         self.__content["Ilosc_produktow"] = quantity
         self.__content["Dostepnosc"] = availability
         self.__content["Termin_wysylki"] = date
+        self.__build_xml()
 
     def __build_xml(self):
         content = "\t\t{}\n".format(self.tag_open.format(self.tag_main))
@@ -45,3 +37,8 @@ class Product:
 
     def get_xml(self):
         return self.__xml_form
+
+    def void_product(self):
+        self.__content["Ilosc_produktow"] = "0"
+        self.__content["Dostepnosc"] = "Niedostępny"
+        self.__content["Termin_wysylki"] = "BRAK"
