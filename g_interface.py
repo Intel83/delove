@@ -253,27 +253,7 @@ class MainWindow(wx.Frame):
                 self.__button_load_supplier.Enable()
 
     def __load_supplier_into_database(self, event):
-        if len(self.__database):
-            print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera błędnych produktów")
-            for ean in self.__database:
-                if ean not in self.__supplier_store.get_store():
-                    print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.")
-                    self.__database[ean].void_product()
-
-        c_map = self.__supplier_store.get_conv_map()
-        entries = 0
-        for prod_ean, prod_fields in self.__supplier_store.get_store().items():
-            code = "{}-{}".format(self.__supplier_store.get_prefix(), prod_fields[c_map[0]])
-            ean = prod_fields[c_map[1]]
-            is_available = prod_fields[c_map[2]]
-            quant = "100" if is_available else "0"
-            avail = "Dostępny" if is_available else "Zapytaj o dostępność"
-            date = "Do 7 dni" if is_available else "Brak informacji"
-            self.__database[ean] = Product(code, ean, quant, avail, date)
-            entries += 1
-        print("Zaktualizowano {} produktów do magazynu.".format(entries))
-        print("W magazynie znajduje się {} produktów".format(len(self.__database)))
-        print("W magazynie znajduje się {} nowych produktów".format(self.__database.new_entries_amount()))
+        self.__database.load_supplier(self.__supplier_store)
         self.__button_save_store.Enable()
 
     def __save_store(self, event):

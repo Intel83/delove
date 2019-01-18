@@ -1,6 +1,5 @@
-import re
-from .product_own import Product
 from .re_structure import *
+from supplier.orion import Orion
 from collections import OrderedDict
 
 
@@ -23,7 +22,8 @@ class Store:
             print("EAN: {} znajduje się w bazie. Zastępuję wpis w bazie wpisem z pliku dostawcy.".format(key))
             self.__content[key] = value
         else:
-            print("EAN: {} nie znajduje się w bazie. Dodaję do bazy nowych produktów".format(key))
+            if len(self):
+                print("EAN: {} nie znajduje się w bazie. Dodaję do bazy nowych produktów".format(key))
             if key in self.__content_new:
                 print("Wpis znajduje się już wśród nowych produktów. Zastępuję wpis świeższym.")
             self.__content_new[key] = value
@@ -36,7 +36,7 @@ class Store:
         with open(file_path, "w", encoding="UTF-8") as out:
             out.write(self.__tag_file)
             out.write("{}\n".format(Product.tag_open.format(self.__tag_main)))
-            for entry in self.__content:
+            for entry in self.__content.values():
                 out.write("{}\n".format(entry.get_xml()))
             out.write("{}\n".format(Product.tag_close.format(self.__tag_main)))
         n_file_path = file_path.replace(".xml", "_nowe.xml")
@@ -47,6 +47,31 @@ class Store:
             for entry in self.__content_new.values():
                 out.write("{}\n".format(entry.get_xml()))
             out.write("{}\n".format(Product.tag_close.format(self.__tag_main)))
+
+    def load_supplier(self, supplier_store):
+        if len(self):
+            print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera błędnych produktów")
+            for ean in self.__content:
+                if ean not in supplier_store.get_store():
+                    print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.")
+                    self.__content[ean].void_product()
+
+        c_map = supplier_store.get_conv_map()
+        entries = 0
+        for prod_ean, prod_fields in supplier_store.get_store().items():
+            code = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
+            ean = prod_fields[c_map[1]]
+            # if ean == "4024144287468":
+            #     print("haha")
+            is_available = True if prod_fields[c_map[2]] == "1" else False
+            quant = "100" if is_available else "0"
+            avail = "Dostępny" if is_available else "Zapytaj o dostępność"
+            date = "Do 7 dni" if is_available else "Brak informacji"
+            self[ean] = Product(code, ean, quant, avail, date)
+            entries += 1
+        print("Zaktualizowano {} produktów do magazynu.".format(entries))
+        print("W magazynie znajduje się {} produktów".format(len(self)))
+        print("W magazynie znajduje się {} nowych produktów".format(len(self.__content_new)))
 
     def load_store_from_file(self, file_path):
         if len(self.__content):
@@ -63,7 +88,7 @@ class Store:
                 entries_total += 1
                 try:
                     cat_no = CAT_NO.search(str(product)).group(1).strip()
-                    if not re.search(r"10-.+", cat_no):
+                    if not re.search(r"{}-.+".format(Orion.PREFIX_CODE), cat_no):
                         entries_non_orion += 1
                         continue
                 except AttributeError:
@@ -94,5 +119,5 @@ class Store:
         print("Wpisów pominiętych w ogóle którym było czegoś brak: {}".format(entries_faulty))
         print("Do pamięci załadowano {} z {} produktów".format(entries_added, entries_total))
 
-    def new_entries_amount(self):
-        return len(self.__content_new)
+    # def new_entries_amount(self):
+    #     return len(self.__content_new)

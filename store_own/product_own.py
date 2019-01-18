@@ -17,11 +17,11 @@ class Product:
     __xml_form = ""
 
     def __init__(self, cat_no, ean, quantity, availability, date):
-        self.__content["Nr_katalogowy_cechy"] = cat_no
-        self.__content["Kod_ean_cechy"] = ean
-        self.__content["Ilosc_produktow"] = quantity
-        self.__content["Dostepnosc"] = availability
-        self.__content["Termin_wysylki"] = date
+        self.__content[self.props[0]] = cat_no
+        self.__content[self.props[1]] = ean
+        self.__content[self.props[2]] = quantity
+        self.__content[self.props[3]] = availability
+        self.__content[self.props[4]] = date
         self.__build_xml()
 
     def __build_xml(self):
@@ -29,7 +29,7 @@ class Product:
         for prop, value in self.__content.items():
             content += "\t\t\t"
             content += self.tag_open.format(prop)
-            content += self.__string_value.format(value) if prop != "Ilosc_produktow" else "{}.00".format(value)
+            content += self.__string_value.format(value) if prop != self.props[2] else "{}.00".format(value)
             content += self.tag_close.format(prop)
             content += "\n"
         content += "\t\t{}\n".format(self.tag_close.format(self.tag_main))
@@ -39,6 +39,6 @@ class Product:
         return self.__xml_form
 
     def void_product(self):
-        self.__content["Ilosc_produktow"] = "0"
-        self.__content["Dostepnosc"] = "Niedostępny"
-        self.__content["Termin_wysylki"] = "BRAK"
+        self.__content[self.props[2]] = "0"
+        self.__content[self.props[3]] = "Niedostępny"
+        self.__content[self.props[4]] = "BRAK"

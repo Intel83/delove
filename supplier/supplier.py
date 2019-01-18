@@ -4,7 +4,7 @@ from collections import OrderedDict
 class Supplier:
     FILETYPE = "xml"
     _CONVERSION_MAP = tuple()
-    _PREFIX_CODE = ""
+    PREFIX_CODE = ""
 
     def __init__(self):
         self._store = OrderedDict()
@@ -23,4 +23,4 @@ class Supplier:
         return self._CONVERSION_MAP
 
     def get_prefix(self):
-        return self._PREFIX_CODE
+        return self.PREFIX_CODE

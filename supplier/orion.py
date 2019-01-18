@@ -17,12 +17,12 @@ class Orion(Supplier):
     }
     __RGX_ATTR = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __RGX_VALUE = re.compile("<value </value>")
-    _PREFIX_CODE = "10"
     _CONVERSION_MAP = (
         "product-id",
         "ean-code",
         "availability"
     )
+    PREFIX_CODE = "10"
 
     def __init__(self):
         Supplier.__init__(self)
