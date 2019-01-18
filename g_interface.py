@@ -1,8 +1,5 @@
 import os
 import wx
-# import database
-# from redcart import products
-from store_own.product_own import Product
 from store_own.database_own import Store
 from supplier.supplier import Supplier
 from supplier import obsessive as obs

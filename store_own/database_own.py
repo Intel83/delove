@@ -61,8 +61,6 @@ class Store:
         for prod_ean, prod_fields in supplier_store.get_store().items():
             code = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
             ean = prod_fields[c_map[1]]
-            # if ean == "4024144287468":
-            #     print("haha")
             is_available = True if prod_fields[c_map[2]] == "1" else False
             quant = "100" if is_available else "0"
             avail = "Dostępny" if is_available else "Zapytaj o dostępność"
@@ -118,6 +116,3 @@ class Store:
         print("Produktów pominiętych w ogóle - bez nr EAN: {}".format(entries_no_ean))
         print("Wpisów pominiętych w ogóle którym było czegoś brak: {}".format(entries_faulty))
         print("Do pamięci załadowano {} z {} produktów".format(entries_added, entries_total))
-
-    # def new_entries_amount(self):
-    #     return len(self.__content_new)

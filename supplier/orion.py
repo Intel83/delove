@@ -13,7 +13,9 @@ class Orion(Supplier):
         "list-price": re.compile("<list-price>(.+?)</list-price>"),
         "ean-code": re.compile(r"<ean-code>(\d+)</ean-code>"),
         "availability": re.compile(r"<availability>(\d)</availability>"),
-        "valid-from-date": re.compile(r"<valid-from-date>(\d+)</valid-from-date>")
+        "valid-from-date": re.compile(r"<valid-from-date>(\d+)</valid-from-date>"),
+        "delivery_week": re.compile(
+            r"<attribute name..delivery_week..attribute-type..string...value.default..1..(.+)</value...attribute.")
     }
     __RGX_ATTR = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __RGX_VALUE = re.compile("<value </value>")
@@ -43,7 +45,10 @@ class Orion(Supplier):
         for product in product_entities:
             new_product = {}
             for field, value in self.__RGX.items():
-                new_product[field] = value.search(product).group(1)
+                try:
+                    new_product[field] = value.search(product).group(1)
+                except AttributeError:
+                    print("Produkt {} nie ma pola: {}".format(new_product["ean-code"], field))
             ean = new_product["ean-code"]
             if ean not in self._store.keys():
                 self._store[ean] = new_product
