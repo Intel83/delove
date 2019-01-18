@@ -53,16 +53,32 @@ class Store:
             print("Czyszczę magazyn z pamięci")
             self.__content = OrderedDict()
         with open(file_path, "r", encoding="UTF-8") as source:
-            entries_total = entries_added = 0
+            entries_total = 0
+            entries_non_orion = 0
+            entries_added = 0
+            entries_no_ean = 0
+            entries_no_cat_no = 0
+            entries_faulty = 0
             for product in PRODUCT.findall(source.read()):
                 entries_total += 1
                 try:
-                    ean = EAN.search(str(product)).group(1)
+                    cat_no = CAT_NO.search(str(product)).group(1).strip()
+                    if not re.search(r"10-.+", cat_no):
+                        entries_non_orion += 1
+                        continue
                 except AttributeError:
-                    print("\nProdukt nie posiada EAN i nie zostanie załadowany {}".format(product))
+                    entries_no_cat_no += 1
+                    # print("\nProdukt nie posiada nr katalogowego i jest pominięty {}".format(product))
+                    continue
+                try:
+                    ean = EAN.search(str(product)).group(1).strip()
+                except AttributeError:
+                    entries_no_ean += 1
+                    # print("\nProdukt nie posiada EAN i zostanie pominięty {}".format(product))
+                    continue
                 try:
                     self.__content[ean] = Product(
-                        CAT_NO.search(str(product)).group(1),
+                        cat_no,
                         ean,
                         QUANTITY.search(str(product)).group(1),
                         AVAIL.search(str(product)).group(1),
@@ -70,7 +86,12 @@ class Store:
                     )
                     entries_added += 1
                 except AttributeError:
-                    print("EAN: {} - błąd ładowania produktu. Sprawdź, czy posiada wymagane pola.".format(ean))
+                    # print("EAN: {} - błąd ładowania produktu. Sprawdź, czy posiada wymagane pola.".format(ean))
+                    entries_faulty += 1
+        print("Produktów pominiętych w ogóle - bez nr katalogowego: {}".format(entries_no_cat_no))
+        print("Produktów pominiętych w ogóle - nie Orion: {}".format(entries_non_orion))
+        print("Produktów pominiętych w ogóle - bez nr EAN: {}".format(entries_no_ean))
+        print("Wpisów pominiętych w ogóle którym było czegoś brak: {}".format(entries_faulty))
         print("Do pamięci załadowano {} z {} produktów".format(entries_added, entries_total))
 
     def new_entries_amount(self):
