@@ -101,27 +101,6 @@ class MainWindow(wx.Frame):
         )
         hsizers.append(hs)
 
-        # Przycisk aktualizacji swojego magazynu
-        hs = wx.BoxSizer(wx.HORIZONTAL)
-        # ładowanie magazynu dostawcy do swojego magazynu
-        self.__button_load_supplier = wx.Button(
-            panel,
-            1,
-            self.__LOAD_SUPPLIER
-        )
-        self.__button_load_supplier.Bind(
-            wx.EVT_BUTTON,
-            self.__load_supplier_into_database
-        )
-        hs.Add(
-            self.__button_load_supplier,
-            0,
-            wx.LEFT,
-            10
-        )
-        self.__button_load_supplier.Disable()
-        hsizers.append(hs)
-
         # Przycisk zachowania pliku swojego magazynu
         hs = wx.BoxSizer(wx.HORIZONTAL)
         # zachowanie pliku magazyna
@@ -191,6 +170,27 @@ class MainWindow(wx.Frame):
         self.__button_read_store.Disable()
         hsizers.append(hs)
 
+        # Przycisk aktualizacji swojego magazynu
+        hs = wx.BoxSizer(wx.HORIZONTAL)
+        # ładowanie magazynu dostawcy do swojego magazynu
+        self.__button_load_supplier = wx.Button(
+            panel,
+            1,
+            self.__LOAD_SUPPLIER
+        )
+        self.__button_load_supplier.Bind(
+            wx.EVT_BUTTON,
+            self.__load_supplier_into_database
+        )
+        hs.Add(
+            self.__button_load_supplier,
+            0,
+            wx.LEFT,
+            10
+        )
+        self.__button_load_supplier.Disable()
+        hsizers.append(hs)
+
         # Przycisk zachowania pliku nowych produktów
         hs = wx.BoxSizer(wx.HORIZONTAL)
         # zachowanie pliku magazyna
@@ -249,8 +249,6 @@ class MainWindow(wx.Frame):
         self.__database.void_main_store()
         self.__database.load_store_from_file(path)
         self.__own_store_loaded = True
-        if self.__supplier_store_loaded:
-            self.__button_load_supplier.Enable()
 
     def __select_supplier(self, event):
         item = tuple(self.__SUPPLIERS.keys())[event.GetSelection()]
@@ -282,13 +280,13 @@ class MainWindow(wx.Frame):
         finally:
             dialog.Destroy()
             if self.__supplier_store.test_store():
-                self.__button_save_new_products.Enable()
-                if self.__own_store_loaded:
-                    self.__button_load_supplier.Enable()
+                self.__button_load_supplier.Enable()
 
     def __load_supplier_into_database(self, event):
         self.__database.load_supplier(self.__supplier_store)
-        self.__button_save_store.Enable()
+        if self.__own_store_loaded:
+            self.__button_save_store.Enable()
+        self.__button_save_new_products.Enable()
 
     def __save_store(self, event):
         with wx.FileDialog(
