@@ -1,6 +1,7 @@
 from .re_structure import *
 from supplier.orion import Orion
 from collections import OrderedDict
+from datetime import datetime
 
 
 class Store:
@@ -62,7 +63,9 @@ class Store:
             quant = "100" if is_available else "0"
             avail = "Dostępny" if is_available else "Zapytaj o dostępność"
             try:
-                date = "Do 7 dni" if is_available else prod_fields[c_map[3]]
+                date = "Do 7 dni" if is_available else str(
+                    datetime.strptime(prod_fields[c_map[3]] + "-1", "%W/%Y-%w")
+                )[:10]
             except KeyError:
                 date = "Brak informacji"
                 print("EAN: {}, dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
