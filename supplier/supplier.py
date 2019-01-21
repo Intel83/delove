@@ -9,6 +9,13 @@ class Supplier:
     def __init__(self):
         self._store = OrderedDict()
 
+    def __len__(self):
+        return len(self._store)
+
+    def void_store(self):
+        self._store.clear()
+        print("Magazyn dostawcy został wyzerowany.")
+
     def load(self, input_file):
         pass
 

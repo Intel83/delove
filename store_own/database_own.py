@@ -31,20 +31,17 @@ class Store:
     def __getitem__(self, item):
         return self.__content[item]
 
-    def dump_store_to_xml(self, file_path):
-        print("Zrzucam plik magazynu - {}".format(file_path))
+    def dump_store_to_xml(self, file_path, only_new_products=False):
+        info = "Zrzucam plik magazynu - {}"
+        content = self.__content
+        if only_new_products:
+            info = "Zrzucam nowe produkty do pliku - {}"
+            content = self.__content_new
+        print(info.format(file_path))
         with open(file_path, "w", encoding="UTF-8") as out:
             out.write(self.__tag_file)
             out.write("{}\n".format(Product.tag_open.format(self.__tag_main)))
-            for entry in self.__content.values():
-                out.write("{}\n".format(entry.get_xml()))
-            out.write("{}\n".format(Product.tag_close.format(self.__tag_main)))
-        n_file_path = file_path.replace(".xml", "_nowe.xml")
-        print("Zrzucam plik nowości - {}".format(n_file_path))
-        with open(n_file_path, "w", encoding="UTF-8") as out:
-            out.write(self.__tag_file)
-            out.write("{}\n".format(Product.tag_open.format(self.__tag_main)))
-            for entry in self.__content_new.values():
+            for entry in content.values():
                 out.write("{}\n".format(entry.get_xml()))
             out.write("{}\n".format(Product.tag_close.format(self.__tag_main)))
 
@@ -113,3 +110,8 @@ class Store:
         print("Produktów pominiętych w ogóle - bez nr EAN: {}".format(entries_no_ean))
         print("Wpisów pominiętych w ogóle którym było czegoś brak: {}".format(entries_faulty))
         print("Do pamięci załadowano {} z {} produktów".format(entries_added, entries_total))
+
+    def void_main_store(self):
+        self.__content.clear()
+        self.__content_new.clear()
+        print("Wyzerowano główny magazyn.")
