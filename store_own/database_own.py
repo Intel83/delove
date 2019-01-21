@@ -72,9 +72,6 @@ class Store:
         print("W magazynie znajduje się {} nowych produktów".format(len(self.__content_new)))
 
     def load_store_from_file(self, file_path):
-        if len(self.__content):
-            print("Czyszczę magazyn z pamięci")
-            self.__content = OrderedDict()
         with open(file_path, "r", encoding="UTF-8") as source:
             entries_total = 0
             entries_non_orion = 0
