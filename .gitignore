@@ -5,3 +5,4 @@ test_input/
 *.xls
 *.xlsx
 *.xml
+*.pyc
