@@ -61,7 +61,15 @@ class Store:
             is_available = True if prod_fields[c_map[2]] == "1" else False
             quant = "100" if is_available else "0"
             avail = "Dostępny" if is_available else "Zapytaj o dostępność"
-            date = "Do 7 dni" if is_available else "Brak informacji"
+            try:
+                date = "Do 7 dni" if is_available else prod_fields[c_map[3]]
+            except KeyError:
+                date = "Brak informacji"
+                print("EAN: {}, dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
+                    ean,
+                    prod_fields[c_map[2]],
+                    date
+                ))
             self[ean] = Product(code, ean, quant, avail, date)
             entries += 1
         print("Zaktualizowano {} produktów do magazynu.".format(entries))

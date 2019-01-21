@@ -22,7 +22,8 @@ class Orion(Supplier):
     _CONVERSION_MAP = (
         "product-id",
         "ean-code",
-        "availability"
+        "availability",
+        "delivery_week"
     )
     PREFIX_CODE = "10"
 
@@ -42,18 +43,19 @@ class Orion(Supplier):
             print("I/O error({0}): {1}".format(e.errno, e.strerror))
         assert data is not None
         product_entities = self.__RGX_PRODUCT.findall(data)
-        for product in product_entities:
-            new_product = {}
-            for field, value in self.__RGX.items():
-                try:
-                    new_product[field] = value.search(product).group(1)
-                except AttributeError:
-                    print("Produkt {} nie ma pola: {}".format(new_product["ean-code"], field))
-            ean = new_product["ean-code"]
-            if ean not in self._store.keys():
-                self._store[ean] = new_product
-            else:
-                print("EAN zdublowany: {}".format(ean))
+        with open("bledy_ladowania_produktow.txt", "w", encoding="UTF-8") as err_out:
+            for product in product_entities:
+                new_product = {}
+                for field, value in self.__RGX.items():
+                    try:
+                        new_product[field] = value.search(product).group(1)
+                    except AttributeError:
+                        err_out.write("Produkt {} nie ma pola: {}\n".format(new_product["ean-code"], field))
+                ean = new_product["ean-code"]
+                if ean not in self._store.keys():
+                    self._store[ean] = new_product
+                else:
+                    err_out.write("EAN zdublowany: {}\n".format(ean))
 
     def test_store(self):
         counter = 0
