@@ -28,9 +28,6 @@ class MainWindow(wx.Frame):
     __database = None
 
     def __init__(self, title):
-        self.__database = Store()
-        self.__supplier_store = Supplier()
-
         wx.Frame.__init__(
             self,
             None,
@@ -221,6 +218,7 @@ class MainWindow(wx.Frame):
         path = dialog.GetPath()
         dialog.Destroy()
         self.__db_label.SetLabel(path)
+        self.__database = Store()
         self.__database.load_store_from_file(path)
         self.__button_save_store.Enable()
 
@@ -240,6 +238,7 @@ class MainWindow(wx.Frame):
             wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
         )
         dialog.ShowModal()
+        self.__supplier_store = Supplier()
         try:
             self.__supplier_store.load(dialog.GetPath())
         except IOError:
