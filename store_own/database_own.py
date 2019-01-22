@@ -91,7 +91,7 @@ class Store:
                 entries_total += 1
                 try:
                     cat_no = CAT_NO.search(str(product)).group(1).strip()
-                    if not re.search(r"{}-.+".format(Orion.PREFIX_CODE), cat_no):
+                    if not re.search(r"{}-.+".format(Orion.prefix_code), cat_no):
                         entries_non_orion += 1
                         continue
                 except AttributeError:

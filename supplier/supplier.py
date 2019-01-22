@@ -3,8 +3,8 @@ from collections import OrderedDict
 
 class Supplier:
     FILETYPE = "xml"
-    _CONVERSION_MAP = tuple()
-    PREFIX_CODE = ""
+    _conversion_map = tuple()
+    prefix_code = ""
 
     def __init__(self):
         self._store = OrderedDict()
@@ -26,8 +26,11 @@ class Supplier:
         print("Wykryto {} wpisow".format(len(self._store)))
         return True
 
+    def download_store_xml(self):
+        pass
+
     def get_conv_map(self):
-        return self._CONVERSION_MAP
+        return self._conversion_map
 
     def get_prefix(self):
-        return self.PREFIX_CODE
+        return self.prefix_code

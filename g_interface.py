@@ -12,13 +12,14 @@ from supplier import livco as liv
 class MainWindow(wx.Frame):
     __SIZEMIN = (600, 300)
     __SIZEMAX = (1000, 1000)
-    __EXIT = "Wyjście"
+    __EXIT = "Wyjście."
     __OWN_DB = "Wczytaj własny magazyn z pliku."
     __SUPPLIER_LABEL = "Wybierz dostawcę:"
-    __PARSE_STORE = "Wczytaj magazyn dostawcy"
-    __LOAD_SUPPLIER = "Aktualizuj swój magazyn danymi od dostawcy"
-    __SAVE_CURRENT_STORE = "Zapisz swój magazyn do pliku xml"
-    __SAVE_NEW_PRODUCTS = "Zapisz nowe produkty do pliku xml"
+    __DOWNLOAD_SUPPLIER = "Ściągnij plik z serwera."
+    __PARSE_STORE = "Wczytaj magazyn dostawcy."
+    __LOAD_SUPPLIER = "Aktualizuj swój magazyn danymi od dostawcy."
+    __SAVE_CURRENT_STORE = "Zapisz swój magazyn do pliku xml."
+    __SAVE_NEW_PRODUCTS = "Zapisz nowe produkty do pliku xml."
     __SUPPLIERS = {
         "Bielizna Centrum": bc.BC(),
         "Boss of Toys": bot.Boss(),
@@ -149,6 +150,27 @@ class MainWindow(wx.Frame):
         )
         hsizers.append(hs)
 
+        # Przycisk ściągania pilku dostawcy
+        hs = wx.BoxSizer(wx.HORIZONTAL)
+        # ściąganie magazynu dostawcy
+        self.__button_download_supplier_store = wx.Button(
+            panel,
+            1,
+            self.__DOWNLOAD_SUPPLIER
+        )
+        self.__button_download_supplier_store.Bind(
+            wx.EVT_BUTTON,
+            self.__download_supplier_store
+        )
+        hs.Add(
+            self.__button_download_supplier_store,
+            0,
+            wx.LEFT,
+            10
+        )
+        self.__button_download_supplier_store.Disable()
+        hsizers.append(hs)
+
         # Przycisk czytania pilku dostawcy
         hs = wx.BoxSizer(wx.HORIZONTAL)
         # czytanie magazynu dostawcy
@@ -261,7 +283,11 @@ class MainWindow(wx.Frame):
             self.__button_load_supplier.Disable()
         if item:
             self.__supplier_store = self.__SUPPLIERS[item]
+            self.__button_download_supplier_store.Enable()
             self.__button_read_store.Enable()
+
+    def __download_supplier_store(self, event):
+        self.__supplier_store.download_store_xml()
 
     def __parse_supplier(self, event):
         dialog = wx.FileDialog(

@@ -1,10 +1,12 @@
 import re
+import urllib.request
+from time import strftime, localtime
 from .supplier import Supplier
 
 
 class Orion(Supplier):
-    __RGX_PRODUCT = re.compile("<product (.*?)</product>", re.DOTALL)
-    __RGX = {
+    __rgx_product = re.compile("<product (.*?)</product>", re.DOTALL)
+    __rgx = {
         "product-id": re.compile(r"product-id=\"(\d+)\""),
         "product-group-id": re.compile(r"product-group-id=\"(\d+)\""),
         "name": re.compile(r"<name><!\[CDATA\[(.+?)\]\]></name>"),
@@ -17,15 +19,17 @@ class Orion(Supplier):
         "delivery_week": re.compile(
             r"<attribute name..delivery_week..attribute-type..string...value.default..1..(.+)</value...attribute.")
     }
-    __RGX_ATTR = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
-    __RGX_VALUE = re.compile("<value </value>")
-    _CONVERSION_MAP = (
+    __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
+    __rgx_value = re.compile("<value </value>")
+    __file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
+                 "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
+    _conversion_map = (
         "product-id",
         "ean-code",
         "availability",
         "delivery_week"
     )
-    PREFIX_CODE = "10"
+    prefix_code = "10"
 
     def __init__(self):
         Supplier.__init__(self)
@@ -42,11 +46,11 @@ class Orion(Supplier):
         except IOError as e:
             print("I/O error({0}): {1}".format(e.errno, e.strerror))
         assert data is not None
-        product_entities = self.__RGX_PRODUCT.findall(data)
+        product_entities = self.__rgx_product.findall(data)
         with open("bledy_ladowania_produktow.txt", "w", encoding="UTF-8") as err_out:
             for product in product_entities:
                 new_product = {}
-                for field, value in self.__RGX.items():
+                for field, value in self.__rgx.items():
                     try:
                         new_product[field] = value.search(product).group(1)
                     except AttributeError:
@@ -70,3 +74,10 @@ class Orion(Supplier):
             return False
         finally:
             print("Sprawdzono {} wpisow".format(counter))
+
+    def download_store_xml(self):
+        timestamp = strftime("%Y_%m_%d_%H_%M_%S", localtime())
+        file = "orion_{}.xml".format(timestamp)
+        print("Rozpoczynam pobieranie magazynu. To potrwa około minuty.")
+        urllib.request.urlretrieve(self.__file_url, file)
+        print("Pobieranie zakończone do pliku: {}".format(file))
