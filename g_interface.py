@@ -10,17 +10,17 @@ from supplier import livco as liv
 
 
 class MainWindow(wx.Frame):
-    __SIZEMIN = (600, 300)
-    __SIZEMAX = (1000, 1000)
-    __EXIT = "Wyjście."
-    __OWN_DB = "Wczytaj własny magazyn z pliku."
-    __SUPPLIER_LABEL = "Wybierz dostawcę:"
-    __DOWNLOAD_SUPPLIER = "Ściągnij plik z serwera."
-    __PARSE_STORE = "Wczytaj magazyn dostawcy."
-    __LOAD_SUPPLIER = "Aktualizuj swój magazyn danymi od dostawcy."
-    __SAVE_CURRENT_STORE = "Zapisz swój magazyn do pliku xml."
-    __SAVE_NEW_PRODUCTS = "Zapisz nowe produkty do pliku xml."
-    __SUPPLIERS = {
+    __sizemin = (600, 300)
+    __sizemax = (1000, 1000)
+    __exit = "Wyjście."
+    __own_db = "Wczytaj własny magazyn z pliku."
+    __supplier_label = "Wybierz dostawcę:"
+    __download_supplier = "Ściągnij plik z serwera."
+    __parse_store = "Wczytaj magazyn dostawcy."
+    __load_supplier = "Aktualizuj swój magazyn danymi od dostawcy."
+    __save_current_store = "Zapisz swój magazyn do pliku xml."
+    __save_new_products_caption = "Zapisz nowe produkty do pliku xml."
+    __suppliers = {
         "Bielizna Centrum": bc.BC(),
         "Boss of Toys": bot.Boss(),
         "Obsessive": obs.Obsessive(),
@@ -39,7 +39,7 @@ class MainWindow(wx.Frame):
             self,
             None,
             title=title,
-            size=self.__SIZEMIN
+            size=self.__sizemin
         )
 
         menu_bar = wx.MenuBar()
@@ -47,7 +47,7 @@ class MainWindow(wx.Frame):
         m_exit = menu.Append(
             wx.ID_EXIT,
             "E&xit\tAlt-X",
-            self.__EXIT
+            self.__exit
         )
         self.Bind(
             wx.EVT_MENU,
@@ -66,7 +66,7 @@ class MainWindow(wx.Frame):
         m_close = wx.Button(
             panel,
             wx.ID_CLOSE,
-            self.__EXIT
+            self.__exit
         )
         m_close.Bind(wx.EVT_BUTTON, self.__on_exit)
 
@@ -79,7 +79,7 @@ class MainWindow(wx.Frame):
         self.__button_load_own_store = wx.Button(
             panel,
             1,
-            self.__OWN_DB
+            self.__own_db
         )
         self.__db_label = wx.StaticText(
             panel,
@@ -108,7 +108,7 @@ class MainWindow(wx.Frame):
         self.__button_save_store = wx.Button(
             panel,
             1,
-            self.__SAVE_CURRENT_STORE
+            self.__save_current_store
         )
         self.__button_save_store.Bind(
             wx.EVT_BUTTON,
@@ -128,11 +128,11 @@ class MainWindow(wx.Frame):
         # wybor dostawcy
         supplier_label = wx.StaticText(
             panel,
-            label=self.__SUPPLIER_LABEL
+            label=self.__supplier_label
         )
         supplier_combo = wx.ComboBox(
             panel,
-            choices=[keys for keys in self.__SUPPLIERS.keys()],
+            choices=[keys for keys in self.__suppliers.keys()],
             style=wx.CB_READONLY
         )
         supplier_combo.Bind(wx.EVT_COMBOBOX, self.__select_supplier)
@@ -156,7 +156,7 @@ class MainWindow(wx.Frame):
         self.__button_download_supplier_store = wx.Button(
             panel,
             1,
-            self.__DOWNLOAD_SUPPLIER
+            self.__download_supplier
         )
         self.__button_download_supplier_store.Bind(
             wx.EVT_BUTTON,
@@ -177,7 +177,7 @@ class MainWindow(wx.Frame):
         self.__button_read_store = wx.Button(
             panel,
             1,
-            self.__PARSE_STORE
+            self.__parse_store
         )
         self.__button_read_store.Bind(
             wx.EVT_BUTTON,
@@ -198,7 +198,7 @@ class MainWindow(wx.Frame):
         self.__button_load_supplier = wx.Button(
             panel,
             1,
-            self.__LOAD_SUPPLIER
+            self.__load_supplier
         )
         self.__button_load_supplier.Bind(
             wx.EVT_BUTTON,
@@ -219,7 +219,7 @@ class MainWindow(wx.Frame):
         self.__button_save_new_products = wx.Button(
             panel,
             1,
-            self.__SAVE_NEW_PRODUCTS
+            self.__save_new_products_caption
         )
         self.__button_save_new_products.Bind(
             wx.EVT_BUTTON,
@@ -249,8 +249,8 @@ class MainWindow(wx.Frame):
         )
 
         panel.SetSizer(box)
-        panel.SetMinSize(self.__SIZEMIN)
-        panel.SetMaxSize(self.__SIZEMAX)
+        panel.SetMinSize(self.__sizemin)
+        panel.SetMaxSize(self.__sizemax)
         # panel.Layout()
         # panel.Show(True)
 
@@ -273,7 +273,7 @@ class MainWindow(wx.Frame):
         self.__own_store_loaded = True
 
     def __select_supplier(self, event):
-        item = tuple(self.__SUPPLIERS.keys())[event.GetSelection()]
+        item = tuple(self.__suppliers.keys())[event.GetSelection()]
         try:
             if len(self.__supplier_store):
                 self.__supplier_store.void_store()
@@ -282,7 +282,7 @@ class MainWindow(wx.Frame):
         except AttributeError:
             self.__button_load_supplier.Disable()
         if item:
-            self.__supplier_store = self.__SUPPLIERS[item]
+            self.__supplier_store = self.__suppliers[item]
             self.__button_download_supplier_store.Enable()
             self.__button_read_store.Enable()
 
@@ -295,7 +295,7 @@ class MainWindow(wx.Frame):
             "Open",
             os.getcwd(),
             "",
-            "Pliki dostawców (*.{0})|*.{0}".format(self.__supplier_store.FILETYPE),
+            "Pliki dostawców (*.{0})|*.{0}".format(self.__supplier_store.filetype),
             wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
         )
         dialog.ShowModal()

@@ -2,10 +2,11 @@ from collections import OrderedDict
 
 
 class Product:
+    __string_value = "<![CDATA[{}]]>"
+    __xml_form = ""
     tag_main = "Produkt"
     tag_open = "<{}>"
     tag_close = "</{}>"
-    __string_value = "<![CDATA[{}]]>"
     props = (
        "Nr_katalogowy_cechy",
        "Kod_ean_cechy",
@@ -14,7 +15,6 @@ class Product:
        "Termin_wysylki",
     )
     __content = OrderedDict({key: "" for key in props})
-    __xml_form = ""
 
     def __init__(self, cat_no, ean, quantity, availability, date):
         self.__content[self.props[0]] = cat_no

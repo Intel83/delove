@@ -4,7 +4,7 @@ from .supplier import Supplier
 
 
 class Obsessive(Supplier):
-    FILETYPE = "xls"
+    filetype = "xls"
     __CODEPAGE = "utf-8"
     __LP_RGX = re.compile(r'.*Lp\..*', re.I)
 

@@ -3,9 +3,9 @@ import wx
 import sys
 import g_interface as gi
 Files_directory = os.path.join(os.getcwd(), "test_input")
-Database_file = "BAZA_DANYCH.csv"
-Obsessive_file = "obsessive.xls"
-BC_file = "bielizna_centrum_test.xml"
+# Database_file = "BAZA_DANYCH.csv"
+# Obsessive_file = "obsessive.xls"
+# BC_file = "bielizna_centrum_test.xml"
 
 
 def main():

@@ -2,8 +2,8 @@ from collections import OrderedDict
 
 
 class Supplier:
-    FILETYPE = "xml"
     _conversion_map = tuple()
+    filetype = "xml"
     prefix_code = ""
 
     def __init__(self):
