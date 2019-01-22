@@ -6,3 +6,4 @@ test_input/
 *.xlsx
 *.xml
 *.pyc
+*.txt
