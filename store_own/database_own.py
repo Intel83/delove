@@ -1,7 +1,15 @@
+import pymysql
 from .re_structure import *
 from supplier.orion import Orion
 from collections import OrderedDict
 from datetime import datetime
+"""
+Baza danych:  delove2_shopgold_sklep_delove
+User: delove2_gold2
+Pass: Delove123!
+Dostęp z zewnątrz do bazy SQL:
+Serwer MySQL z zewnątrz mn26.webd.pl   w razie problemów z łączeniem podaj swój adres IP
+"""
 
 
 class Store:
@@ -9,6 +17,10 @@ class Store:
     __tag_main = "Produkty"
     __content = None
     __content_new = None
+    __db_url = "mn26.webd.pl"
+    __db_name = "delove2_shopgold_sklep_delove"
+    __db_user = "delove2_gold2"
+    __db_pass = "Delove123!"
 
     def __init__(self):
         self.__content = OrderedDict()
@@ -121,6 +133,27 @@ class Store:
         print("Produktów pominiętych w ogóle - bez nr EAN: {}".format(entries_no_ean))
         print("Wpisów pominiętych w ogóle którym było czegoś brak: {}".format(entries_faulty))
         print("Do pamięci załadowano {} z {} produktów".format(entries_added, entries_total))
+
+    def download_own_store(self):
+        # TODO - ściągnięcie własnego magazynu
+        db = pymysql.connect(
+            self.__db_url,
+            self.__db_user,
+            self.__db_pass,
+            self.__db_name
+        )
+        cursor = db.cursor()
+        query = "SELECT " \
+                "products_stock_model, " \
+                "products_stock_ean, " \
+                "products_stock_quantity, " \
+                "products_stock_availability_id, " \
+                "products_stock_shipping_time_id " \
+                "FROM products_stock;"
+        cursor.execute(query)
+        data = cursor.fetchall()
+        print(data)
+        db.close()
 
     def void_main_store(self):
         self.__content.clear()

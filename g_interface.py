@@ -14,6 +14,7 @@ class MainWindow(wx.Frame):
     __sizemax = (1000, 1000)
     __exit = "Wyjście."
     __own_db = "Wczytaj własny magazyn z pliku."
+    __download_db = "Ściągnij własny magazyn z bazy danych."
     __supplier_label = "Wybierz dostawcę:"
     __download_supplier = "Ściągnij plik z serwera."
     __parse_store = "Wczytaj magazyn dostawcy."
@@ -72,6 +73,26 @@ class MainWindow(wx.Frame):
 
         vs1 = wx.BoxSizer(wx.VERTICAL)
         hsizers = []
+
+        # Przycisk ściągnięcia swojego magazynu
+        hs = wx.BoxSizer(wx.HORIZONTAL)
+        # ladowanie bazy danych
+        self.__button_get_own_database = wx.Button(
+            panel,
+            1,
+            self.__download_db
+        )
+        self.__button_get_own_database.Bind(
+            wx.EVT_BUTTON,
+            self.__get_own_db
+        )
+        hs.Add(
+            self.__button_get_own_database,
+            0,
+            wx.LEFT,
+            10
+        )
+        hsizers.append(hs)
 
         # Przycisk wczytania swojego magazynu
         hs = wx.BoxSizer(wx.HORIZONTAL)
@@ -253,6 +274,10 @@ class MainWindow(wx.Frame):
         panel.SetMaxSize(self.__sizemax)
         # panel.Layout()
         # panel.Show(True)
+
+    def __get_own_db(self, event):
+        self.__database.void_main_store()
+        self.__database.download_own_store()
 
     def __load_own_store(self, event):
         dialog = wx.FileDialog(
