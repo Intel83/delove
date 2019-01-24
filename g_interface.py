@@ -13,7 +13,7 @@ class MainWindow(wx.Frame):
     __sizemin = (600, 300)
     __sizemax = (1000, 1000)
     __exit = "Wyjście."
-    __own_db = "Wczytaj własny magazyn z pliku."
+    # __own_db = "Wczytaj własny magazyn z pliku."
     __download_db = "Ściągnij własny magazyn z bazy danych."
     __supplier_label = "Wybierz dostawcę:"
     __download_supplier = "Ściągnij plik z serwera."
@@ -94,34 +94,34 @@ class MainWindow(wx.Frame):
         )
         hsizers.append(hs)
 
-        # Przycisk wczytania swojego magazynu
-        hs = wx.BoxSizer(wx.HORIZONTAL)
-        # ladowanie bazy danych
-        self.__button_load_own_store = wx.Button(
-            panel,
-            1,
-            self.__own_db
-        )
-        self.__db_label = wx.StaticText(
-            panel,
-            label=""
-        )
-        self.__button_load_own_store.Bind(
-            wx.EVT_BUTTON,
-            self.__load_own_store
-        )
-        hs.Add(
-            self.__button_load_own_store,
-            0,
-            wx.LEFT,
-            10
-        )
-        hs.Add(
-            self.__db_label,
-            0,
-            wx.LEFT
-        )
-        hsizers.append(hs)
+        # # Przycisk wczytania swojego magazynu
+        # hs = wx.BoxSizer(wx.HORIZONTAL)
+        # # ladowanie bazy danych
+        # self.__button_load_own_store = wx.Button(
+        #     panel,
+        #     1,
+        #     self.__own_db
+        # )
+        # self.__db_label = wx.StaticText(
+        #     panel,
+        #     label=""
+        # )
+        # self.__button_load_own_store.Bind(
+        #     wx.EVT_BUTTON,
+        #     self.__load_own_store
+        # )
+        # hs.Add(
+        #     self.__button_load_own_store,
+        #     0,
+        #     wx.LEFT,
+        #     10
+        # )
+        # hs.Add(
+        #     self.__db_label,
+        #     0,
+        #     wx.LEFT
+        # )
+        # hsizers.append(hs)
 
         # Przycisk zachowania pliku swojego magazynu
         hs = wx.BoxSizer(wx.HORIZONTAL)
@@ -276,26 +276,29 @@ class MainWindow(wx.Frame):
         # panel.Show(True)
 
     def __get_own_db(self, event):
-        self.__database.void_main_store()
-        self.__database.download_own_store()
-
-    def __load_own_store(self, event):
-        dialog = wx.FileDialog(
-            self,
-            "Open",
-            os.getcwd(),
-            "",
-            "Pliki bazy danych (*.xml)|*.xml",
-            wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
-        )
-        dialog.ShowModal()
-        path = dialog.GetPath()
-        dialog.Destroy()
-        self.__db_label.SetLabel(path)
         self.__button_save_store.Disable()
         self.__database.void_main_store()
-        self.__database.load_store_from_file(path)
+        self.__database.download_own_store()
+        self.__button_save_store.Enable()
         self.__own_store_loaded = True
+
+    # def __load_own_store(self, event):
+    #     dialog = wx.FileDialog(
+    #         self,
+    #         "Open",
+    #         os.getcwd(),
+    #         "",
+    #         "Pliki bazy danych (*.xml)|*.xml",
+    #         wx.FD_OPEN | wx.FD_FILE_MUST_EXIST
+    #     )
+    #     dialog.ShowModal()
+    #     path = dialog.GetPath()
+    #     dialog.Destroy()
+    #     self.__db_label.SetLabel(path)
+    #     self.__button_save_store.Disable()
+    #     self.__database.void_main_store()
+    #     self.__database.load_store_from_file(path)
+    #     self.__own_store_loaded = True
 
     def __select_supplier(self, event):
         item = tuple(self.__suppliers.keys())[event.GetSelection()]
@@ -326,12 +329,14 @@ class MainWindow(wx.Frame):
         dialog.ShowModal()
         try:
             self.__supplier_store.load(dialog.GetPath())
-        except IOError:
-            print("Błąd ładowania pliku dostawcy")
-        finally:
-            dialog.Destroy()
             if self.__supplier_store.test_store():
                 self.__button_load_supplier.Enable()
+        except IOError:
+            print("Błąd ładowania pliku dostawcy")
+        except AssertionError:
+            print("Nie wybrano pliku dostawcy.")
+        finally:
+            dialog.Destroy()
 
     def __load_supplier_into_database(self, event):
         self.__database.load_supplier(self.__supplier_store)

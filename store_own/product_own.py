@@ -29,7 +29,7 @@ class Product:
         for prop, value in self.__content.items():
             content += "\t\t\t"
             content += self.tag_open.format(prop)
-            content += self.__string_value.format(value) if prop != self.props[2] else "{}.00".format(value)
+            content += self.__string_value.format(value) if prop != self.props[2] else "{}.00".format(str(value))
             content += self.tag_close.format(prop)
             content += "\n"
         content += "\t\t{}\n".format(self.tag_close.format(self.tag_main))
