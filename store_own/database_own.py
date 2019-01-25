@@ -56,7 +56,9 @@ class Store:
             print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera błędnych produktów")
             for ean in self.__content:
                 if ean not in supplier_store.get_store():
-                    print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.")
+                    print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.".format(
+                        ean
+                    ))
                     self.__content[ean].void_product()
 
         c_map = supplier_store.get_conv_map()
