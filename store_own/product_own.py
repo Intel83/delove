@@ -1,9 +1,8 @@
-from collections import OrderedDict
+# from collections import OrderedDict
 
 
 class Product:
     __string_value = "<![CDATA[{}]]>"
-    __xml_form = ""
     tag_main = "Produkt"
     tag_open = "<{}>"
     tag_close = "</{}>"
@@ -14,19 +13,17 @@ class Product:
        "Dostepnosc",
        "Termin_wysylki",
     )
-    __content = OrderedDict({key: "" for key in props})
 
-    def __init__(self, cat_no, ean, quantity, availability, date):
-        self.__content[self.props[0]] = cat_no
-        self.__content[self.props[1]] = ean
-        self.__content[self.props[2]] = quantity
-        self.__content[self.props[3]] = availability
-        self.__content[self.props[4]] = date
-        self.__build_xml()
+    def __init__(self):
+        self.__properties = {}
+        self.__xml_form = ""
+
+    def __getitem__(self, item):
+        return self.__properties
 
     def __build_xml(self):
         content = "\t\t{}\n".format(self.tag_open.format(self.tag_main))
-        for prop, value in self.__content.items():
+        for prop, value in self.__properties.items():
             content += "\t\t\t"
             content += self.tag_open.format(prop)
             content += self.__string_value.format(value) if prop != self.props[2] else "{}.00".format(str(value))
@@ -35,10 +32,18 @@ class Product:
         content += "\t\t{}\n".format(self.tag_close.format(self.tag_main))
         self.__xml_form = content
 
+    def set_props(self, product_tuple):
+        self.__properties[self.props[0]] = product_tuple[0]
+        self.__properties[self.props[1]] = product_tuple[1]
+        self.__properties[self.props[2]] = int(product_tuple[2])
+        self.__properties[self.props[3]] = product_tuple[3]
+        self.__properties[self.props[4]] = product_tuple[4]
+        self.__build_xml()
+
     def get_xml(self):
         return self.__xml_form
 
     def void_product(self):
-        self.__content[self.props[2]] = "0"
-        self.__content[self.props[3]] = "Niedostępny"
-        self.__content[self.props[4]] = "BRAK"
+        self.__properties[self.props[2]] = "0"
+        self.__properties[self.props[3]] = "Niedostępny"
+        self.__properties[self.props[4]] = "BRAK"

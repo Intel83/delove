@@ -1,4 +1,4 @@
-from collections import OrderedDict
+# from collections import OrderedDict
 
 
 class Supplier:
@@ -7,7 +7,7 @@ class Supplier:
     prefix_code = ""
 
     def __init__(self):
-        self._store = OrderedDict()
+        self._store = {}
 
     def __len__(self):
         return len(self._store)

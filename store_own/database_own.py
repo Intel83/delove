@@ -1,7 +1,7 @@
 import pymysql
 from .re_structure import *
 # from supplier.orion import Orion
-from collections import OrderedDict
+# from collections import OrderedDict
 from datetime import datetime
 
 
@@ -16,8 +16,8 @@ class Store:
     __db_pass = "Delove123!"
 
     def __init__(self):
-        self.__content = OrderedDict()
-        self.__content_new = OrderedDict()
+        self.__content = {}
+        self.__content_new = {}
 
     def __len__(self):
         return len(self.__content)
@@ -55,11 +55,13 @@ class Store:
         if len(self):
             print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera błędnych produktów")
             for ean in self.__content:
-                if ean not in supplier_store.get_store():
-                    print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.".format(
-                        ean
-                    ))
-                    self.__content[ean].void_product()
+                sku_prefix = self.__content[ean][0]['Nr_katalogowy_cechy'][:2]
+                if sku_prefix == supplier_store.get_prefix:
+                    if ean not in supplier_store.get_store():
+                        print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.".format(
+                            ean
+                        ))
+                        self.__content[ean].void_product()
 
         c_map = supplier_store.get_conv_map()
         entries = 0
@@ -80,7 +82,8 @@ class Store:
                     prod_fields[c_map[2]],
                     date
                 ))
-            self[ean] = Product(code, ean, quant, avail, date)
+            self[ean] = Product()
+            self[ean].set_props(code, ean, quant, avail, date)
             entries += 1
         print("Zaktualizowano {} produktów do magazynu.".format(entries))
         print("W magazynie znajduje się {} produktów".format(len(self)))
@@ -112,7 +115,7 @@ class Store:
     #                 # print("\nProdukt nie posiada EAN i zostanie pominięty {}".format(product))
     #                 continue
     #             try:
-    #                 self.__content[ean] = Product(
+    #                 self.__properties[ean] = Product(
     #                     cat_no,
     #                     ean,
     #                     QUANTITY.search(str(product)).group(1),
@@ -139,8 +142,10 @@ class Store:
                 self.__db_pass,
                 self.__db_name
             )
-            cursor = db.cursor()
-            query = """
+        except pymysql.err:
+            print("Błąd ładowania bazy danych.")
+        cursor = db.cursor()
+        query = """
 SELECT products_stock_model, products_stock_ean, 
 products_stock_quantity, products_availability_name, products_shipping_time_name
 FROM products_stock, products_availability_description, products_shipping_time_description
@@ -152,16 +157,14 @@ products_availability_description.language_id = 1 AND
 products_stock_model != '' AND products_stock_ean != ''
 ;
             """
-            cursor.execute(query)
-        except pymysql.err:
-            print("Błąd ładowania bazy danych.")
-        self.__content = {product[1]:
-                          Product(product[0], product[1], int(product[2]), product[3], product[4])
-                          for product in cursor.fetchall() if product[1]}
-        print(
-            "Pomijam produkty nie posiadające EAN lub nr katalogowego cechy\nZaładowano {} produktów.".format(len(self))
-        )
+        cursor.execute(query)
+        remote_store = cursor.fetchall()
         db.close()
+        self.__content = {product[1]: Product() for product in remote_store}
+        for product in remote_store:
+            ean = product[1]
+            self.__content[ean].set_props(product)
+        print("Wczytano {} produktów".format(len(self)))
 
     def void_main_store(self):
         self.__content.clear()
