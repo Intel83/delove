@@ -52,15 +52,15 @@ class Store:
 
     def load_supplier(self, supplier_store):
         if len(self):
-            print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera błędnych produktów")
-            for ean in self.__content:
-                sku_prefix = self.__content[ean][0]['Nr_katalogowy_cechy'][:2]
-                if sku_prefix == supplier_store.get_prefix:
+            print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera produktów nieaktualnych u dostawcy.")
+            for product in self.__content.items():
+                if supplier_store.is_supplying(product):
+                    ean = product.get_ean()
                     if ean not in supplier_store.get_store():
                         print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.".format(
                             ean
                         ))
-                        self.__content[ean].void_product()
+                        product.void_product()
 
         c_map = supplier_store.get_conv_map()
         entries = 0
