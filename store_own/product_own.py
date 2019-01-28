@@ -1,4 +1,4 @@
-# from collections import OrderedDict
+from collections import OrderedDict
 
 
 class Product:
@@ -15,7 +15,7 @@ class Product:
     )
 
     def __init__(self):
-        self.__properties = {}
+        self.__properties = OrderedDict()
         self.__xml_form = ""
 
     def __getitem__(self, item):
@@ -39,6 +39,9 @@ class Product:
         self.__properties[self.props[3]] = product_tuple[3]
         self.__properties[self.props[4]] = product_tuple[4]
         self.__build_xml()
+
+    def get_props(self):
+        return self.__properties
 
     def get_xml(self):
         return self.__xml_form
