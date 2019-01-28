@@ -43,6 +43,9 @@ class Product:
     def get_ean(self):
         return self.__properties[self.props[1]]
 
+    def get_sku(self):
+        return self.__properties[self.props[0]]
+
     def get_xml(self):
         return self.__xml_form
 
