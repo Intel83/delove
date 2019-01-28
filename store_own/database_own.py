@@ -24,11 +24,11 @@ class Store:
     def __setitem__(self, key, value):
         assert value is not Product
         if key in self.__content:
-            print("EAN: {} znajduje się w bazie. Zastępuję wpis w bazie wpisem z pliku dostawcy.".format(key))
+            # print("EAN: {} znajduje się w bazie delove. Zastępuję wpis w bazie wpisem z pliku dostawcy.".format(key))
             self.__content[key] = value
         else:
-            if len(self):
-                print("EAN: {} nie znajduje się w bazie. Dodaję do bazy nowych produktów".format(key))
+            # if len(self):
+            #     print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(key))
             if key in self.__content_new:
                 print("Wpis znajduje się już wśród nowych produktów. Zastępuję wpis świeższym.")
             self.__content_new[key] = value
