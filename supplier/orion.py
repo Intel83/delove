@@ -60,6 +60,7 @@ class Orion(Supplier):
                     self._store[ean] = new_product
                 else:
                     err_out.write("EAN zdublowany: {}\n".format(ean))
+        print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
 
     def test_store(self):
         counter = 0

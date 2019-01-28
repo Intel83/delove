@@ -120,7 +120,7 @@ products_stock_model != '' AND products_stock_ean != ''
         for product in remote_store:
             ean = product[1]
             self.__content[ean].set_props(product)
-        print("Wczytano {} produktów".format(len(self)))
+        print("Z bazy danych delove wczytano {} produktów".format(len(self)))
 
     def void_main_store(self):
         self.__content.clear()
