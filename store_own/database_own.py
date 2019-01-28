@@ -53,7 +53,7 @@ class Store:
     def load_supplier(self, supplier_store):
         if len(self):
             print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera produktów nieaktualnych u dostawcy.")
-            for product in self.__content.items():
+            for product in self.__content.values():
                 if supplier_store.is_supplying(product):
                     ean = product.get_ean()
                     if ean not in supplier_store.get_store():
