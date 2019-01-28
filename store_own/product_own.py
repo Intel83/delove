@@ -18,9 +18,6 @@ class Product:
         self.__properties = OrderedDict()
         self.__xml_form = ""
 
-    def __getitem__(self, item):
-        return self.__properties
-
     def __build_xml(self):
         content = "\t\t{}\n".format(self.tag_open.format(self.tag_main))
         for prop, value in self.__properties.items():
@@ -42,6 +39,9 @@ class Product:
 
     def get_props(self):
         return self.__properties
+
+    def get_ean(self):
+        return self.__properties[self.props[1]]
 
     def get_xml(self):
         return self.__xml_form
