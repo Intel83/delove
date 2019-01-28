@@ -34,7 +34,10 @@ class Store:
             self.__content_new[key] = value
 
     def __getitem__(self, item):
-        return self.__content[item]
+        try:
+            return self.__content[item]
+        except KeyError:
+            return self.__content_new[item]
 
     def dump_store_to_xml(self, file_path, only_new_products=False):
         info = "Zrzucam plik magazynu - {}"
@@ -51,21 +54,22 @@ class Store:
             out.write("{}\n".format(Product.tag_close.format(self.__tag_main)))
 
     def load_supplier(self, supplier_store):
-        if len(self):
-            print("Własny magazyn nie jest pusty. Sprawdzam czy nie zawiera produktów nieaktualnych u dostawcy.")
-            for product in self.__content.values():
-                if supplier_store.is_supplying(product):
-                    ean = product.get_ean()
-                    if ean not in supplier_store.get_store():
-                        print("EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie.".format(
-                            ean
-                        ))
-                        product.void_product()
+        supplier_products_in_store = len(
+            {product for product in self.__content.values() if supplier_store.is_supplying(product)}
+        )
+        for product in self.__content.values():
+            if supplier_store.is_supplying(product):
+                ean = product.get_ean()
+                if ean not in supplier_store.get_store():
+                    print(
+                        "EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie."
+                        .format(ean)
+                    )
+                    product.void_product()
 
         c_map = supplier_store.get_conv_map()
-        entries = 0
         for prod_ean, prod_fields in supplier_store.get_store().items():
-            code = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
+            sku = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
             ean = prod_fields[c_map[1]]
             is_available = True if prod_fields[c_map[2]] == "1" else False
             quant = "100" if is_available else "0"
@@ -82,11 +86,9 @@ class Store:
                     date
                 ))
             self[ean] = Product()
-            self[ean].set_props(code, ean, quant, avail, date)
-            entries += 1
-        print("Zaktualizowano {} produktów do magazynu.".format(entries))
-        print("W magazynie znajduje się {} produktów".format(len(self)))
-        print("W magazynie znajduje się {} nowych produktów".format(len(self.__content_new)))
+            self[ean].set_props((sku, ean, quant, avail, date))
+        print("W bazie delove jest {} produktów tego dostawcy.".format(supplier_products_in_store))
+        print("W magazynie dostawcy znaleziono {} nowych produktów.".format(len(self.__content_new)))
 
     def download_own_store(self):
         db = None
@@ -125,4 +127,4 @@ products_stock_model != '' AND products_stock_ean != ''
     def void_main_store(self):
         self.__content.clear()
         self.__content_new.clear()
-        print("Wyzerowano główny magazyn.")
+        print("Wymazano główny magazyn z pamięci.")

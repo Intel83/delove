@@ -50,6 +50,6 @@ class Product:
         return self.__xml_form
 
     def void_product(self):
-        self.__properties[self.props[2]] = "0"
+        self.__properties[self.props[2]] = 0
         self.__properties[self.props[3]] = "Niedostępny"
         self.__properties[self.props[4]] = "BRAK"
