@@ -36,7 +36,7 @@ class Supplier:
     def get_prefix(self):
         return self.prefix_code
 
-    def right_supplier(self, product):
+    def is_supplying(self, product):
         assert product is not Product()
         return product.get_props()[product.props[0]][:2] == self.prefix_code
 
