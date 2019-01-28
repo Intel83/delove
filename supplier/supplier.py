@@ -1,4 +1,5 @@
-# from collections import OrderedDict
+from collections import OrderedDict
+from store_own.product_own import Product
 
 
 class Supplier:
@@ -7,7 +8,7 @@ class Supplier:
     prefix_code = ""
 
     def __init__(self):
-        self._store = {}
+        self._store = OrderedDict()
 
     def __len__(self):
         return len(self._store)
@@ -34,3 +35,8 @@ class Supplier:
 
     def get_prefix(self):
         return self.prefix_code
+
+    def right_supplier(self, product):
+        assert product is not Product()
+        return product.get_props()[product.props[0]][:2] == self.prefix_code
+
