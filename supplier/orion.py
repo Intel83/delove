@@ -2,6 +2,7 @@ import re
 import urllib.request
 from time import strftime, localtime
 from .supplier import Supplier
+from .orion_excl import orion_exclusions
 
 
 class Orion(Supplier):
@@ -56,6 +57,9 @@ class Orion(Supplier):
                     except AttributeError:
                         err_out.write("Produkt {} nie ma pola: {}\n".format(new_product["ean-code"], field))
                 ean = new_product["ean-code"]
+                if ean in orion_exclusions:
+                    print("Produkt {} został wykluczony.".format(ean))
+                    continue
                 if ean not in self._store.keys():
                     self._store[ean] = new_product
                 else:
