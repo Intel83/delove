@@ -56,10 +56,12 @@ class Orion(Supplier):
                     try:
                         new_product[field] = value.search(product).group(1)
                     except AttributeError:
-                        err_out.write("Produkt {} nie ma pola: {}\n".format(new_product["ean-code"], field))
+                        err_out.write(
+                            "Produkt o numerze EAN{} nie ma pola: {}\n".format(new_product["ean-code"], field)
+                        )
                 ean = new_product["ean-code"]
                 if ean in orion_exclusions:
-                    print("Produkt {} został wykluczony.".format(ean))
+                    print("Produkt o numerze EAN {} został wykluczony.".format(ean))
                     exclusions_applied += 1
                     continue
                 if ean not in self._store.keys():
