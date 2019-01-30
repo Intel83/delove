@@ -48,6 +48,7 @@ class Orion(Supplier):
             print("I/O error({0}): {1}".format(e.errno, e.strerror))
         assert data is not None
         product_entities = self.__rgx_product.findall(data)
+        exclusions_applied = 0
         with open("bledy_ladowania_produktow.txt", "w", encoding="UTF-8") as err_out:
             for product in product_entities:
                 new_product = {}
@@ -59,12 +60,14 @@ class Orion(Supplier):
                 ean = new_product["ean-code"]
                 if ean in orion_exclusions:
                     print("Produkt {} został wykluczony.".format(ean))
+                    exclusions_applied += 1
                     continue
                 if ean not in self._store.keys():
                     self._store[ean] = new_product
                 else:
                     err_out.write("EAN zdublowany: {}\n".format(ean))
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
+        print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
 
     def test_store(self):
         counter = 0
