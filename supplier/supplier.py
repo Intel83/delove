@@ -24,7 +24,7 @@ class Supplier:
         return self._store
 
     def test_store(self):
-        print("Wykryto {} wpisow".format(len(self._store)))
+        print("Wykryto {} wpisów.".format(len(self._store)))
         return True
 
     def download_store_xml(self):

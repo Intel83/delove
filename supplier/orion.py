@@ -45,7 +45,7 @@ class Orion(Supplier):
             ) as handle:
                 data = handle.read()
         except IOError as e:
-            print("I/O error({0}): {1}".format(e.errno, e.strerror))
+            print("I/O error({0}): {1}.".format(e.errno, e.strerror))
         assert data is not None
         product_entities = self.__rgx_product.findall(data)
         exclusions_applied = 0
@@ -57,7 +57,7 @@ class Orion(Supplier):
                         new_product[field] = value.search(product).group(1)
                     except AttributeError:
                         err_out.write(
-                            "Produkt o numerze EAN{} nie ma pola: {}\n".format(new_product["ean-code"], field)
+                            "Produkt o numerze EAN{} nie ma pola: {}.\n".format(new_product["ean-code"], field)
                         )
                 ean = new_product["ean-code"]
                 if ean in orion_exclusions:
@@ -67,7 +67,7 @@ class Orion(Supplier):
                 if ean not in self._store.keys():
                     self._store[ean] = new_product
                 else:
-                    err_out.write("EAN zdublowany: {}\n".format(ean))
+                    err_out.write("EAN zdublowany: {}.\n".format(ean))
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
         print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
 
@@ -77,10 +77,10 @@ class Orion(Supplier):
             for ean, fields in self._store.items():
                 counter += 1
                 if ean == "" or any([field for field in fields if field == ""]):
-                    print("zly wpis dla EAN: {}".format(ean))
+                    print("Zły wpis dla EAN: {}.".format(ean))
             return True
         except KeyError:
-            print("zly wpis {}".format(counter))
+            print("Zły wpis {}.".format(counter))
             return False
         finally:
             print("Sprawdzono {} wpisow. Nie ma pustych pól.".format(counter))
