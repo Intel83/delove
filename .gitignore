@@ -7,3 +7,4 @@ test_input/
 *.xml
 *.pyc
 *.txt
+supplier/orion_excl.py
