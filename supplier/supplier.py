@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from store_own.product_own import Product
+from store_own.product_update import ProductUpdate
 
 
 class Supplier:
@@ -37,6 +37,6 @@ class Supplier:
         return self.prefix_code
 
     def is_supplying(self, product):
-        assert product is not Product()
+        assert product is not ProductUpdate()
         return product.get_props()[product.props[0]][:2] == self.prefix_code
 

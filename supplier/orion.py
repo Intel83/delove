@@ -18,7 +18,17 @@ class Orion(Supplier):
         "availability": re.compile(r"<availability>(\d)</availability>"),
         "valid-from-date": re.compile(r"<valid-from-date>(\d+)</valid-from-date>"),
         "delivery_week": re.compile(
-            r"<attribute name..delivery_week..attribute-type..string...value.default..1..(.+)</value...attribute.")
+            r"<attribute name..delivery_week..attribute-type..string...value.default..1..(.+)</value...attribute."
+        ),
+        "weight": re.compile(
+            r"<attribute name..weight..attribute-type..integer...value.default..1..(.+)</value...attribute."
+        ),
+        "full_text": re.compile(
+            r"<attribute name..full_text..attribute-type..text.+?EN.><!\[CDATA\[(.+?)\]\]>", re.DOTALL
+        ),
+        "detailed_text": re.compile(
+            r"<attribute name..detailed_text..attribute-type..text.+?EN.><!\[CDATA\[(.+?)\]\]>", re.DOTALL
+        ),
     }
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
@@ -28,7 +38,12 @@ class Orion(Supplier):
         "product-id",
         "ean-code",
         "availability",
-        "delivery_week"
+        "delivery_week",
+        "name",
+        "weight",
+        "list-price",
+        "full_text",
+        "detailed_text"
     )
     prefix_code = "10"
 
