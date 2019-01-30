@@ -28,7 +28,7 @@ class Store:
             self.__content[key] = value
         else:
             if len(self):
-                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(key))
+                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów.".format(key))
             if key in self.__content_new:
                 print("Wpis znajduje się już wśród nowych produktów. Zastępuję wpis świeższym.")
             self.__content_new[key] = value
@@ -40,10 +40,10 @@ class Store:
             return self.__content_new[item]
 
     def dump_store_to_xml(self, file_path, only_new_products=False):
-        info = "Zrzucam plik magazynu - {}"
+        info = "Zrzucam plik magazynu - {}."
         content = self.__content
         if only_new_products:
-            info = "Zrzucam nowe produkty do pliku - {}"
+            info = "Zrzucam nowe produkty do pliku - {}."
             content = self.__content_new
         print(info.format(file_path))
         with open(file_path, "w", encoding="UTF-8") as out:
@@ -80,7 +80,7 @@ class Store:
                 )
             except KeyError:
                 date = "Brak informacji"
-                print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
+                print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\".".format(
                     ean,
                     prod_fields[c_map[2]],
                     date
@@ -122,7 +122,7 @@ products_stock_model != '' AND products_stock_ean != ''
         for product in remote_store:
             ean = product[1]
             self.__content[ean].set_props(product)
-        print("Z bazy danych delove wczytano {} produktów".format(len(self)))
+        print("Z bazy danych delove wczytano {} produktów.".format(len(self)))
 
     def void_main_store(self):
         self.__content.clear()
