@@ -23,10 +23,10 @@ class Orion(Supplier):
             r"<attribute name..weight..attribute-type..integer...value.default..1..(.+)</value...attribute."
         ),
         "full_text": re.compile(
-            r"<attribute name..full_text..attribute-type..text.+?EN<!\[CDATA\[(.+?)\]\]>", re.DOTALL
+            r"<attribute name..full_text..attribute-type..text.+?EN.><!\[CDATA\[(.+?)\]\]>", re.DOTALL
         ),
         "detailed_text": re.compile(
-            r"<attribute name..detailed_text..attribute-type..text.+?EN<!\[CDATA\[(.+?)\]\]>", re.DOTALL
+            r"<attribute name..detailed_text..attribute-type..text.+?EN.><!\[CDATA\[(.+?)\]\]>", re.DOTALL
         ),
     }
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)

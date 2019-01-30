@@ -53,8 +53,8 @@ class NewProduct(ProductUpdate):
 
     def set_props(self, product_tuple):
         self._properties[self.props[0]] = product_tuple[0]
-        self._properties[self.props[1]] = int(product_tuple[1]) / 1000
-        self._properties[self.props[2]] = int(product_tuple[2]) * 1.19 * 2 * self.__eur_to_pln_rate
+        self._properties[self.props[1]] = float(product_tuple[1]) / 1000
+        self._properties[self.props[2]] = float(product_tuple[2]) * 1.19 * 2 * self.__eur_to_pln_rate
         self._properties[self.props[3]] = product_tuple[3]
         self._properties[self.props[4]] = product_tuple[4]
         sku = product_tuple[5]
