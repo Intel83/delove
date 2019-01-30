@@ -284,7 +284,7 @@ class MainWindow(wx.Frame):
             if self.__supplier_store.test_store():
                 self.__button_load_supplier.Enable()
         except IOError:
-            print("Błąd ładowania pliku dostawcy")
+            print("Błąd ładowania pliku dostawcy.")
         except AssertionError:
             print("Nie wybrano pliku dostawcy.")
         finally:
@@ -312,7 +312,7 @@ class MainWindow(wx.Frame):
     def __save_new_products(self, event):
         with wx.FileDialog(
             self,
-            "Zachowaj nowe produkty",
+            "Zachowaj nowe produkty.",
             os.getcwd(),
             "",
             "Pliki XML (*.xml)|*.xml",
