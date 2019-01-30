@@ -83,7 +83,7 @@ class Orion(Supplier):
             print("zly wpis {}".format(counter))
             return False
         finally:
-            print("Sprawdzono {} wpisow".format(counter))
+            print("Sprawdzono {} wpisow. Nie ma pustych pól.".format(counter))
 
     def download_store_xml(self):
         timestamp = strftime("%Y_%m_%d_%H_%M_%S", localtime())
