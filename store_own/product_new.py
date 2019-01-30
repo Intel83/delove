@@ -21,8 +21,8 @@ class NewProduct(ProductUpdate):
     <Producent><![CDATA[Nowy]]></Producent>
     <Gabaryt>nie</Gabaryt>
     <Nazwa_produktu><![CDATA[{}]]></Nazwa_produktu>
-    <Waga>{:.3}</Waga>
-    <Cena_brutto>{:.3}</Cena_brutto>
+    <Waga>{:.2f}</Waga>
+    <Cena_brutto>{:.2f}</Cena_brutto>
     <Opis><![CDATA[{}]]></Opis>
     <Opis_krotki><![CDATA[{}]]></Opis_krotki>
     <Nr_katalogowy>{}</Nr_katalogowy>
