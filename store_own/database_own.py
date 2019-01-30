@@ -78,12 +78,21 @@ class Store:
             else:
                 print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(prod_ean))
                 self.__content_new[prod_ean] = NewProduct()
+                full_text = detailed_text = ""
+                try:
+                    full_text = prod_fields[c_map[7]]
+                except KeyError:
+                    print("Produkt {} nie ma angielskiego opisu. Zostawiam puste.".format(prod_ean))
+                try:
+                    detailed_text = prod_fields[c_map[8]]
+                except KeyError:
+                    print("Produkt {} nie ma angielskiego opisu skróconego. Zostawiam puste.".format(prod_ean))
                 self.__content_new[prod_ean].set_props((
                     prod_fields[c_map[4]],
                     prod_fields[c_map[5]],
                     prod_fields[c_map[6]],
-                    prod_fields[c_map[7]],
-                    prod_fields[c_map[8]],
+                    full_text,
+                    detailed_text,
                     prod_fields[c_map[0]],
                 ))
 
