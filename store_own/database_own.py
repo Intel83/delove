@@ -80,7 +80,7 @@ class Store:
                 )
             except KeyError:
                 date = "Brak informacji"
-                print("EAN: {}, dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
+                print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
                     ean,
                     prod_fields[c_map[2]],
                     date
