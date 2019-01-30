@@ -1,5 +1,6 @@
 import pymysql
 from .re_structure import *
+from .product_new import NewProduct
 from collections import OrderedDict
 from datetime import datetime
 
@@ -21,24 +22,6 @@ class Store:
     def __len__(self):
         return len(self.__content)
 
-    def __setitem__(self, key, value):
-        assert value is not Product
-        if key in self.__content:
-            print("EAN: {} znajduje się w bazie delove. Zastępuję wpis w bazie wpisem z pliku dostawcy.".format(key))
-            self.__content[key] = value
-        else:
-            if len(self):
-                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(key))
-            if key in self.__content_new:
-                print("Wpis znajduje się już wśród nowych produktów. Zastępuję wpis świeższym.")
-            self.__content_new[key] = value
-
-    def __getitem__(self, item):
-        try:
-            return self.__content[item]
-        except KeyError:
-            return self.__content_new[item]
-
     def dump_store_to_xml(self, file_path, only_new_products=False):
         info = "Zrzucam plik magazynu - {}"
         content = self.__content
@@ -48,13 +31,13 @@ class Store:
         print(info.format(file_path))
         with open(file_path, "w", encoding="UTF-8") as out:
             out.write(self.__tag_file)
-            out.write("{}\n".format(Product.tag_open.format(self.__tag_main)))
+            out.write("{}\n".format(ProductUpdate.tag_open.format(self.__tag_main)))
             for entry in content.values():
                 out.write("{}\n".format(entry.get_xml()))
-            out.write("{}\n".format(Product.tag_close.format(self.__tag_main)))
+            out.write("{}\n".format(ProductUpdate.tag_close.format(self.__tag_main)))
 
     def load_supplier(self, supplier_store):
-        supplier_products_in_store = len(
+        supplier_products_in_own_store = len(
             {product for product in self.__content.values() if supplier_store.is_supplying(product)}
         )
         for product in self.__content.values():
@@ -69,25 +52,42 @@ class Store:
 
         c_map = supplier_store.get_conv_map()
         for prod_ean, prod_fields in supplier_store.get_store().items():
-            sku = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
-            ean = prod_fields[c_map[1]]
-            is_available = True if prod_fields[c_map[2]] == "1" else False
-            quant = "100" if is_available else "0"
-            avail = "Dostępny" if is_available else "Zapytaj o dostępność"
-            try:
-                date = "Do 7 dni" if is_available else "od {}".format(
-                    str(datetime.strptime(prod_fields[c_map[3]] + "-1", "%W/%Y-%w"))[:10]
+            if prod_ean in self.__content:
+                print(
+                    "EAN: {} znajduje się w bazie delove. Zastępuję wpis w bazie wpisem z pliku dostawcy.".format(
+                        prod_ean
+                    )
                 )
-            except KeyError:
-                date = "Brak informacji"
-                print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
-                    ean,
-                    prod_fields[c_map[2]],
-                    date
+                self.__content[prod_ean] = ProductUpdate()
+                sku = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
+                is_available = True if prod_fields[c_map[2]] == "1" else False
+                quant = "100" if is_available else "0"
+                avail = "Dostępny" if is_available else "Zapytaj o dostępność"
+                try:
+                    date = "Do 7 dni" if is_available else "od {}".format(
+                        str(datetime.strptime(prod_fields[c_map[3]] + "-1", "%W/%Y-%w"))[:10]
+                    )
+                except KeyError:
+                    date = "Brak informacji"
+                    print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
+                        prod_ean,
+                        prod_fields[c_map[2]],
+                        date
+                    ))
+                self.__content[prod_ean].set_props((sku, prod_ean, quant, avail, date))
+            else:
+                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(prod_ean))
+                self.__content_new[prod_ean] = NewProduct()
+                self.__content_new[prod_ean].set_props((
+                    prod_fields[c_map[4]],
+                    prod_fields[c_map[5]],
+                    prod_fields[c_map[6]],
+                    prod_fields[c_map[7]],
+                    prod_fields[c_map[8]],
+                    prod_fields[c_map[0]],
                 ))
-            self[ean] = Product()
-            self[ean].set_props((sku, ean, quant, avail, date))
-        print("W bazie delove jest {} produktów tego dostawcy.".format(supplier_products_in_store))
+
+        print("W bazie delove jest {} produktów tego dostawcy.".format(supplier_products_in_own_store))
         print("W magazynie dostawcy znaleziono {} nowych produktów.".format(len(self.__content_new)))
 
     def download_own_store(self):
@@ -118,7 +118,7 @@ products_stock_model != '' AND products_stock_ean != ''
         cursor.execute(query)
         remote_store = cursor.fetchall()
         db.close()
-        self.__content = {product[1]: Product() for product in remote_store}
+        self.__content = {product[1]: ProductUpdate() for product in remote_store}
         for product in remote_store:
             ean = product[1]
             self.__content[ean].set_props(product)
