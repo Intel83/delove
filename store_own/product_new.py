@@ -58,7 +58,7 @@ class NewProduct(ProductUpdate):
         self._properties[self.props[3]] = product_tuple[3]
         self._properties[self.props[4]] = product_tuple[4]
         sku = product_tuple[5]
-        self._properties[self.props[5]] = sku[:6] if sku[0] != "0" else sku[1:7]
+        self._properties[self.props[5]] = sku[:7] if sku[0] != "0" else sku[1:7]
         self._build_xml()
 
     def void_product(self):
