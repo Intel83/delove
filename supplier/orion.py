@@ -82,7 +82,7 @@ class Orion(Supplier):
                 if ean not in self._store.keys():
                     self._store[ean] = new_product
                 else:
-                    err_out.write("EAN zdublowany: {}.\n".format(ean))
+                    err_out.write("EAN: {} zdublowany.\n".format(ean))
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
         print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
 

@@ -45,7 +45,7 @@ class Store:
                 ean = product.get_ean()
                 if ean not in supplier_store.get_store():
                     print(
-                        "EAN {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie."
+                        "EAN: {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie."
                         .format(ean)
                     )
                     product.void_product()
