@@ -10,6 +10,9 @@ class Orion(Supplier):
     __rgx = {
         "product-id": re.compile(r"product-id=\"(\d+)\""),
         "product-group-id": re.compile(r"product-group-id=\"(\d+)\""),
+        "barcode": re.compile(
+            r"<attribute name..barcode..attribute-type..string...value.default..1..(.+)</value...attribute."
+        ),
         "name": re.compile(r"<name><!\[CDATA\[(.+?)\]\]></name>"),
         "selling-price": re.compile("<selling-price>(.+?)</selling-price>"),
         "dicount-prohibited": re.compile(r"<dicount-prohibited>(\d)</dicount-prohibited>"),
@@ -28,16 +31,14 @@ class Orion(Supplier):
         ),
         "detailed_text": re.compile(
             r"<attribute name..detailed_text..attribute-type..text.+?EN.><!\[CDATA\[(.+?)\]\]>", re.DOTALL
-        ),
-        "barcode": re.compile(
-            r"<attribute name..barcode..attribute-type..string...value.default..1..(.+)</value...attribute."
-        ),
+        )
     }
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
     __file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
                  "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
     _conversion_map = (
+        "barcode",
         "product-id",
         "ean-code",
         "availability",
@@ -46,8 +47,7 @@ class Orion(Supplier):
         "weight",
         "list-price",
         "full_text",
-        "detailed_text",
-        "barcode"
+        "detailed_text"
     )
     prefix_code = "10"
 
