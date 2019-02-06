@@ -38,7 +38,6 @@ class Orion(Supplier):
     __file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
                  "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
     _conversion_map = (
-        "barcode",
         "product-id",
         "ean-code",
         "availability",
@@ -47,7 +46,8 @@ class Orion(Supplier):
         "weight",
         "list-price",
         "full_text",
-        "detailed_text"
+        "detailed_text",
+        "barcode"
     )
     prefix_code = "10"
 
