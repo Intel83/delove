@@ -76,17 +76,17 @@ class Orion(Supplier):
                         new_product[field] = value.search(product).group(1)
                     except AttributeError:
                         err_out.write(
-                            "barcode: {} nie ma pola: {}.\n".format(new_product["barcode"], field)
+                            "EAN (barcode): {} nie ma pola: {}.\n".format(new_product["barcode"], field)
                         )
                 barcode = new_product["barcode"]
                 if barcode in orion_exclusions:
-                    print("barcode: {} został wykluczony.".format(barcode))
+                    print("EAN (barcode): {} został wykluczony.".format(barcode))
                     exclusions_applied += 1
                     continue
                 if barcode not in self._store.keys():
                     self._store[barcode] = new_product
                 else:
-                    err_out.write("EAN: {} zdublowany.\n".format(barcode))
+                    err_out.write("EAN (barcode): {} zdublowany.\n".format(barcode))
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
         print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
 
@@ -96,7 +96,7 @@ class Orion(Supplier):
             for barcode, fields in self._store.items():
                 counter += 1
                 if barcode == "" or any([field for field in fields if field == ""]):
-                    print("Zły wpis dla barcode: {}.".format(barcode))
+                    print("Zły wpis dla EAN (barcode): {}.".format(barcode))
             return True
         except KeyError:
             print("Zły wpis {}.".format(counter))
