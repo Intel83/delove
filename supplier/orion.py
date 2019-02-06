@@ -33,7 +33,6 @@ class Orion(Supplier):
             r"<attribute name..barcode..attribute-type..string...value.default..1..(.+)</value...attribute."
         ),
     }
-    # <attribute name="barcode" attribute-type="string"><value default="1">4008600192145</value></attribute>
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
     __file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
