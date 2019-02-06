@@ -29,7 +29,11 @@ class Orion(Supplier):
         "detailed_text": re.compile(
             r"<attribute name..detailed_text..attribute-type..text.+?EN.><!\[CDATA\[(.+?)\]\]>", re.DOTALL
         ),
+        "barcode": re.compile(
+            r"<attribute name..barcode..attribute-type..string...value.default..1..(.+)</value...attribute."
+        ),
     }
+    # <attribute name="barcode" attribute-type="string"><value default="1">4008600192145</value></attribute>
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
     __file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
@@ -43,7 +47,8 @@ class Orion(Supplier):
         "weight",
         "list-price",
         "full_text",
-        "detailed_text"
+        "detailed_text",
+        "barcode"
     )
     prefix_code = "10"
 
@@ -72,27 +77,27 @@ class Orion(Supplier):
                         new_product[field] = value.search(product).group(1)
                     except AttributeError:
                         err_out.write(
-                            "Produkt o numerze EAN{} nie ma pola: {}.\n".format(new_product["ean-code"], field)
+                            "barcode: {} nie ma pola: {}.\n".format(new_product["barcode"], field)
                         )
-                ean = new_product["ean-code"]
-                if ean in orion_exclusions:
-                    print("Produkt o numerze EAN {} został wykluczony.".format(ean))
+                barcode = new_product["barcode"]
+                if barcode in orion_exclusions:
+                    print("barcode: {} został wykluczony.".format(barcode))
                     exclusions_applied += 1
                     continue
-                if ean not in self._store.keys():
-                    self._store[ean] = new_product
+                if barcode not in self._store.keys():
+                    self._store[barcode] = new_product
                 else:
-                    err_out.write("EAN: {} zdublowany.\n".format(ean))
+                    err_out.write("EAN: {} zdublowany.\n".format(barcode))
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
         print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
 
     def test_store(self):
         counter = 0
         try:
-            for ean, fields in self._store.items():
+            for barcode, fields in self._store.items():
                 counter += 1
-                if ean == "" or any([field for field in fields if field == ""]):
-                    print("Zły wpis dla EAN: {}.".format(ean))
+                if barcode == "" or any([field for field in fields if field == ""]):
+                    print("Zły wpis dla barcode: {}.".format(barcode))
             return True
         except KeyError:
             print("Zły wpis {}.".format(counter))
