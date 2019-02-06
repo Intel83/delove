@@ -15,7 +15,7 @@ class MainWindow(wx.Frame):
     __exit = "Wyjście."
     __download_db = "Ściągnij własny magazyn z bazy danych."
     __supplier_label = "Wybierz dostawcę:"
-    __download_supplier = "Ściągnij plik z serwera."
+    __download_supplier = "Ściągnij magazyn z serwera dostawcy."
     __parse_store = "Wczytaj magazyn dostawcy."
     __load_supplier = "Aktualizuj swój magazyn danymi od dostawcy."
     __save_current_store = "Zapisz swój magazyn do pliku xml."
