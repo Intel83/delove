@@ -8,6 +8,18 @@ class Boss(Supplier):
     _supplier_name = "boss_of_toys"
     _file_url = "http://bossoftoys.pl/images/products/xml/5658fd03-869d-4fd8-bb5d-db680a7071ac.xml"
     _rgx_product = re.compile("<Record>(.*?)</Record>", re.DOTALL)
+    # _conversion_map = (
+    #     "product-id",
+    #     "ean-code",
+    #     "availability",
+    #     "delivery_week",
+    #     "name",
+    #     "weight",
+    #     "list-price",
+    #     "full_text",
+    #     "detailed_text",
+    #     "barcode"
+    # )
     prefix_code = ""
 
     def __init__(self):
@@ -28,14 +40,14 @@ class Boss(Supplier):
                     if "gallery" not in field_value:
                         new_product[field_name] = field[1]
                 try:
-                    code = new_product["code"]
+                    code = new_product["kod"]
                 except KeyError:
-                    err_out.write("Produkt nie ma pola \"code\": {}".format(str(product)))
+                    err_out.write("Produkt nie ma pola \"code\": {}\n".format(str(product)))
                     code = ""
                 try:
                     ean = new_product["ean"]
                 except KeyError:
-                    err_out.write("Produkt nie ma pola \"ean\": {}".format(str(product)))
+                    err_out.write("Produkt nie ma pola \"ean\": {}\n".format(str(code)))
                     ean = ""
                 complex_key = (code, ean)
                 if ean in exclusions:
