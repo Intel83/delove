@@ -21,11 +21,11 @@ class MainWindow(wx.Frame):
     __save_current_store = "Zapisz swój magazyn do pliku xml."
     __save_new_products_caption = "Zapisz nowe produkty do pliku xml."
     __suppliers = {
-        "Bielizna Centrum": bc.BC(),
+        # "Bielizna Centrum": bc.BC(),
         "Boss of Toys": bot.Boss(),
-        "Obsessive": obs.Obsessive(),
+        # "Obsessive": obs.Obsessive(),
         "Orion": ori.Orion(),
-        "Livco": liv.Livco()
+        # "Livco": liv.Livco()
     }
     __database = None
     __own_store_loaded = False
