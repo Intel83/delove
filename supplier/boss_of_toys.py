@@ -5,6 +5,9 @@ from .supplier import Supplier
 class Boss(Supplier):
     __RGX_PRODUCT = re.compile("<Record>(.*?)</Record>", re.DOTALL)
     __RGX_FIELD = re.compile(r"<(?P<name>[\w_]+)>(?P<value>.*?)</\1>", re.DOTALL)
+    _supplier_name = "boss_of_toys"
+    _file_url = "http://bossoftoys.pl/images/products/xml/5658fd03-869d-4fd8-bb5d-db680a7071ac.xml"
+    prefix_code = ""
 
     def __init__(self):
         Supplier.__init__(self)
