@@ -44,11 +44,14 @@ class Store:
             if supplier_store.is_supplying(product):
                 ean = product.get_ean()
                 if ean not in supplier_store.get_store():
-                    print(
-                        "EAN: {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie."
-                        .format(ean)
-                    )
-                    product.void_product()
+                    if not supplier_store.supplier_name == "boss_of_toys":
+                        print(
+                            "EAN: {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie."
+                            .format(ean)
+                        )
+                        product.void_product()
+                    else:
+                        print("EAN: {} nie znajduje się w magazynie Boss of Toys - pomijam.")
 
         c_map = supplier_store.get_conv_map()
         for prod_ean, prod_fields in supplier_store.get_store().items():

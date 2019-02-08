@@ -8,11 +8,11 @@ from store_own.product_update import ProductUpdate
 class Supplier:
     _rgx_product = re.compile("")
     _conversion_map = tuple()
-    _supplier_name = ""
     _errors_file = "bledy_ladowania_produktow_{}.txt"
     _file_url = ""
     _products = []
     filetype = "xml"
+    supplier_name = ""
     prefix_code = ""
 
     def __init__(self):
@@ -61,7 +61,7 @@ class Supplier:
 
     def download_store_xml(self):
         timestamp = strftime("%Y_%m_%d_%H_%M_%S", localtime())
-        file = "{}_{}.xml".format(self._supplier_name, timestamp)
+        file = "{}_{}.xml".format(self.supplier_name, timestamp)
         print("Rozpoczynam pobieranie magazynu. To potrwa około minuty.")
         urllib.request.urlretrieve(self._file_url, file)
         print("Pobieranie zakończone do pliku: {}".format(file))

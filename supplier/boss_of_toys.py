@@ -5,7 +5,6 @@ from .boss_of_toys_excl import boss_of_toys_exclusions as exclusions
 
 class Boss(Supplier):
     __rgx_field = re.compile(r"<(?P<name>[\w_]+)>(?P<value>.*?)</\1>", re.DOTALL)
-    _supplier_name = "boss_of_toys"
     _file_url = "http://bossoftoys.pl/images/products/xml/5658fd03-869d-4fd8-bb5d-db680a7071ac.xml"
     _rgx_product = re.compile("<Record>(.*?)</Record>", re.DOTALL)
     # _conversion_map = (
@@ -20,7 +19,8 @@ class Boss(Supplier):
     #     "detailed_text",
     #     "barcode"
     # )
-    prefix_code = ""
+    supplier_name = "boss_of_toys"
+    prefix_code = "42"
 
     def __init__(self):
         Supplier.__init__(self)

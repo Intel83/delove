@@ -32,7 +32,6 @@ class Orion(Supplier):
     }
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
-    _supplier_name = "orion"
     _file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
                 "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
     _rgx_product = re.compile("<product (.*?)</product>", re.DOTALL)
@@ -48,6 +47,7 @@ class Orion(Supplier):
         "detailed_text",
         "barcode"
     )
+    supplier_name = "orion"
     prefix_code = "10"
 
     def __init__(self):
