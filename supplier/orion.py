@@ -1,6 +1,4 @@
 import re
-import urllib.request
-from time import strftime, localtime
 from .supplier import Supplier
 from .orion_excl import orion_exclusions
 
@@ -35,8 +33,9 @@ class Orion(Supplier):
     }
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
-    __file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
-                 "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
+    _supplier_name = "orion"
+    _file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
+                "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
     _conversion_map = (
         "product-id",
         "ean-code",
@@ -103,10 +102,3 @@ class Orion(Supplier):
             return False
         finally:
             print("Sprawdzono {} wpisow. Nie ma pustych pól.".format(counter))
-
-    def download_store_xml(self):
-        timestamp = strftime("%Y_%m_%d_%H_%M_%S", localtime())
-        file = "orion_{}.xml".format(timestamp)
-        print("Rozpoczynam pobieranie magazynu. To potrwa około minuty.")
-        urllib.request.urlretrieve(self.__file_url, file)
-        print("Pobieranie zakończone do pliku: {}".format(file))

@@ -1,9 +1,13 @@
+import urllib.request
+from time import strftime, localtime
 from collections import OrderedDict
 from store_own.product_update import ProductUpdate
 
 
 class Supplier:
     _conversion_map = tuple()
+    _supplier_name = ""
+    _file_url = ""
     filetype = "xml"
     prefix_code = ""
 
@@ -28,7 +32,11 @@ class Supplier:
         return True
 
     def download_store_xml(self):
-        pass
+        timestamp = strftime("%Y_%m_%d_%H_%M_%S", localtime())
+        file = "{}_{}.xml".format(self._supplier_name, timestamp)
+        print("Rozpoczynam pobieranie magazynu. To potrwa około minuty.")
+        urllib.request.urlretrieve(self._file_url, file)
+        print("Pobieranie zakończone do pliku: {}".format(file))
 
     def get_conv_map(self):
         return self._conversion_map
