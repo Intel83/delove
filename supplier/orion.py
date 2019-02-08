@@ -67,7 +67,7 @@ class Orion(Supplier):
         assert data is not None
         product_entities = self.__rgx_product.findall(data)
         exclusions_applied = 0
-        with open("bledy_ladowania_produktow.txt", "w", encoding="UTF-8") as err_out:
+        with open(self._errors_file.format(self._supplier_name), "w", encoding="UTF-8") as err_out:
             for product in product_entities:
                 new_product = {}
                 for field, value in self.__rgx.items():

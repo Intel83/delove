@@ -7,6 +7,7 @@ from store_own.product_update import ProductUpdate
 class Supplier:
     _conversion_map = tuple()
     _supplier_name = ""
+    _errors_file = "bledy_ladowania_produktow_{}.txt"
     _file_url = ""
     filetype = "xml"
     prefix_code = ""
