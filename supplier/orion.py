@@ -88,17 +88,3 @@ class Orion(Supplier):
                     err_out.write("EAN (barcode): {} zdublowany.\n".format(barcode))
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
         print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
-
-    def test_store(self):
-        counter = 0
-        try:
-            for barcode, fields in self._store.items():
-                counter += 1
-                if barcode == "" or any([field for field in fields if field == ""]):
-                    print("Zły wpis dla EAN (barcode): {}.".format(barcode))
-            return True
-        except KeyError:
-            print("Zły wpis {}.".format(counter))
-            return False
-        finally:
-            print("Sprawdzono {} wpisow. Nie ma pustych pól.".format(counter))

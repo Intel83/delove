@@ -29,8 +29,18 @@ class Supplier:
         return self._store
 
     def test_store(self):
-        print("Wykryto {} wpisów.".format(len(self._store)))
-        return True
+        counter = 0
+        try:
+            for ean, fields in self._store.items():
+                counter += 1
+                if ean == "" or any([field for field in fields if field == ""]):
+                    print("Zły wpis dla EAN/barcode: {}.".format(ean))
+            return True
+        except KeyError:
+            print("Zły wpis {}.".format(counter))
+            return False
+        finally:
+            print("Sprawdzono {} wpisow. Nie ma pustych pól.".format(counter))
 
     def download_store_xml(self):
         timestamp = strftime("%Y_%m_%d_%H_%M_%S", localtime())
