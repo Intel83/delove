@@ -5,20 +5,13 @@ from .boss_of_toys_excl import boss_of_toys_exclusions as exclusions
 
 class Boss(Supplier):
     __rgx_field = re.compile(r"<(?P<name>[\w_]+)>(?P<value>.*?)</\1>", re.DOTALL)
+    __orion_prefices = {
+        "40",
+        "42",
+        "48"
+    }
     _file_url = "http://bossoftoys.pl/images/products/xml/5658fd03-869d-4fd8-bb5d-db680a7071ac.xml"
     _rgx_product = re.compile("<Record>(.*?)</Record>", re.DOTALL)
-    # _conversion_map = (
-    #     "product-id",
-    #     "ean-code",
-    #     "availability",
-    #     "delivery_week",
-    #     "name",
-    #     "weight",
-    #     "list-price",
-    #     "full_text",
-    #     "detailed_text",
-    #     "barcode"
-    # )
     supplier_name = "boss_of_toys"
     prefix_code = "42"
 
