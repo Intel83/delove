@@ -1,10 +1,9 @@
 import re
 from .supplier import Supplier
-from .orion_excl import orion_exclusions
+from .orion_excl import orion_exclusions as exclusions
 
 
 class Orion(Supplier):
-    __rgx_product = re.compile("<product (.*?)</product>", re.DOTALL)
     __rgx = {
         "product-id": re.compile(r"product-id=\"(\d+)\""),
         "product-group-id": re.compile(r"product-group-id=\"(\d+)\""),
@@ -36,6 +35,7 @@ class Orion(Supplier):
     _supplier_name = "orion"
     _file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?" \
                 "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
+    _rgx_product = re.compile("<product (.*?)</product>", re.DOTALL)
     _conversion_map = (
         "product-id",
         "ean-code",
@@ -54,21 +54,13 @@ class Orion(Supplier):
         Supplier.__init__(self)
 
     def load(self, input_file):
-        data = None
-        try:
-            with open(
-                    input_file,
-                    "r",
-                    encoding="utf8"
-            ) as handle:
-                data = handle.read()
-        except IOError as e:
-            print("I/O error({0}): {1}.".format(e.errno, e.strerror))
-        assert data is not None
-        product_entities = self.__rgx_product.findall(data)
-        exclusions_applied = 0
         with open(self._errors_file.format(self._supplier_name), "w", encoding="UTF-8") as err_out:
-            for product in product_entities:
+            try:
+                self._read_supplier_file_into_products(input_file)
+            except AssertionError:
+                err_out.write("Błąd ładownia pliku dostawcy")
+            exclusions_applied = 0
+            for product in self._products:
                 new_product = {}
                 for field, value in self.__rgx.items():
                     try:
@@ -78,7 +70,7 @@ class Orion(Supplier):
                             "EAN (barcode): {} nie ma pola: {}.\n".format(new_product["barcode"], field)
                         )
                 barcode = new_product["barcode"]
-                if barcode in orion_exclusions:
+                if barcode in exclusions:
                     print("EAN (barcode): {} został wykluczony.".format(barcode))
                     exclusions_applied += 1
                     continue

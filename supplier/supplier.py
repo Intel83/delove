@@ -1,3 +1,4 @@
+import re
 import urllib.request
 from time import strftime, localtime
 from collections import OrderedDict
@@ -5,10 +6,12 @@ from store_own.product_update import ProductUpdate
 
 
 class Supplier:
+    _rgx_product = re.compile("")
     _conversion_map = tuple()
     _supplier_name = ""
     _errors_file = "bledy_ladowania_produktow_{}.txt"
     _file_url = ""
+    _products = []
     filetype = "xml"
     prefix_code = ""
 
@@ -17,6 +20,20 @@ class Supplier:
 
     def __len__(self):
         return len(self._store)
+
+    def _read_supplier_file_into_products(self, input_file):
+        raw_data = ""
+        try:
+            with open(
+                    input_file,
+                    "r",
+                    encoding="UTF-8"
+            ) as handle:
+                raw_data = handle.read()
+        except IOError as e:
+            print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        assert self._products is not None
+        self._products = self._rgx_product.findall(raw_data)
 
     def void_store(self):
         self._store.clear()
