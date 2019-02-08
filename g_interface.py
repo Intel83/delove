@@ -2,11 +2,11 @@ import os
 import wx
 from store_own.database_own import Store
 from supplier.supplier import Supplier
-from supplier import obsessive as obs
-from supplier import bielizna_centrum as bc
+# from supplier import obsessive as obs
+# from supplier import bielizna_centrum as bc
 from supplier import orion as ori
 from supplier import boss_of_toys as bot
-from supplier import livco as liv
+# from supplier import livco as liv
 
 
 class MainWindow(wx.Frame):
@@ -242,8 +242,6 @@ class MainWindow(wx.Frame):
         panel.SetSizer(box)
         panel.SetMinSize(self.__sizemin)
         panel.SetMaxSize(self.__sizemax)
-        # panel.Layout()
-        # panel.Show(True)
 
     def __get_own_db(self, event):
         self.__button_save_store.Disable()

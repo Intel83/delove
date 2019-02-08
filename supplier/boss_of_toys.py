@@ -26,7 +26,7 @@ class Boss(Supplier):
         Supplier.__init__(self)
 
     def load(self, input_file):
-        with open(self._errors_file.format(self._supplier_name), "w", encoding="UTF-8") as err_out:
+        with open(self._errors_file.format(self.supplier_name), "w", encoding="UTF-8") as err_out:
             try:
                 self._read_supplier_file_into_products(input_file)
             except AssertionError:

@@ -75,4 +75,3 @@ class Supplier:
     def is_supplying(self, product):
         assert product is not ProductUpdate()
         return product.get_props()[product.props[0]][:2] == self.prefix_code
-
