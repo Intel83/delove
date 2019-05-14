@@ -288,8 +288,12 @@ class MainWindow(wx.Frame):
         finally:
             dialog.Destroy()
 
+    # TEST
     def __load_supplier_into_database(self, event):
-        self.__database.load_supplier(self.__supplier_store)
+        self.__supplier_store.update_own_store(
+            self.__database.get_own_store_dict(),
+            self.__database.get_new_products_dict()
+        )
         if self.__own_store_loaded:
             self.__button_save_store.Enable()
         self.__button_save_new_products.Enable()

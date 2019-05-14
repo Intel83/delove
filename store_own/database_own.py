@@ -1,8 +1,6 @@
 import pymysql
 from .re_structure import *
-from .product_new import NewProduct
 from collections import OrderedDict
-from datetime import datetime
 
 
 class Store:
@@ -36,71 +34,11 @@ class Store:
                 out.write("{}\n".format(entry.get_xml()))
             out.write("{}\n".format(ProductUpdate.tag_close.format(self.__tag_main)))
 
-    def load_supplier(self, supplier_store):
-        supplier_products_in_own_store = len(
-            {product for product in self.__content.values() if supplier_store.is_supplying(product)}
-        )
-        for product in self.__content.values():
-            if supplier_store.is_supplying(product):
-                ean = product.get_ean()
-                if ean not in supplier_store.get_store():
-                    if not supplier_store.supplier_name == "boss_of_toys":
-                        print(
-                            "EAN: {} nie znajduje się w magazynie dostawcy. Zmieniam wpis we własnym magazynie."
-                            .format(ean)
-                        )
-                        product.void_product()
-                    else:
-                        print("EAN: {} nie znajduje się w magazynie Boss of Toys - pomijam.")
+    def get_own_store_dict(self):
+        return self.__content
 
-        c_map = supplier_store.get_conv_map()
-        for prod_ean, prod_fields in supplier_store.get_store().items():
-            if prod_ean in self.__content:
-                print(
-                    "EAN: {} znajduje się w bazie delove. Zastępuję wpis w bazie wpisem z pliku dostawcy.".format(
-                        prod_ean
-                    )
-                )
-                self.__content[prod_ean] = ProductUpdate()
-                sku = "{}-{}".format(supplier_store.get_prefix(), prod_fields[c_map[0]])
-                is_available = True if prod_fields[c_map[2]] == "1" else False
-                quant = "100" if is_available else "0"
-                avail = "Dostępny" if is_available else "Zapytaj o dostępność"
-                try:
-                    date = "Do 7 dni" if is_available else "od {}".format(
-                        str(datetime.strptime(prod_fields[c_map[3]] + "-1", "%W/%Y-%w"))[:10]
-                    )
-                except KeyError:
-                    date = "Brak informacji"
-                    print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
-                        prod_ean,
-                        prod_fields[c_map[2]],
-                        date
-                    ))
-                self.__content[prod_ean].set_props((sku, prod_ean, quant, avail, date))
-            else:
-                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(prod_ean))
-                self.__content_new[prod_ean] = NewProduct()
-                full_text = detailed_text = ""
-                try:
-                    full_text = prod_fields[c_map[7]]
-                except KeyError:
-                    print("Produkt {} nie ma angielskiego opisu. Zostawiam puste.".format(prod_ean))
-                try:
-                    detailed_text = prod_fields[c_map[8]]
-                except KeyError:
-                    print("Produkt {} nie ma angielskiego opisu skróconego. Zostawiam puste.".format(prod_ean))
-                self.__content_new[prod_ean].set_props((
-                    prod_fields[c_map[4]],
-                    prod_fields[c_map[5]],
-                    prod_fields[c_map[6]],
-                    full_text,
-                    detailed_text,
-                    prod_fields[c_map[0]],
-                ))
-
-        print("W bazie delove jest {} produktów tego dostawcy.".format(supplier_products_in_own_store))
-        print("W magazynie dostawcy znaleziono {} nowych produktów.".format(len(self.__content_new)))
+    def get_new_products_dict(self):
+        return self.__content
 
     def download_own_store(self):
         db = None

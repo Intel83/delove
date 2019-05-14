@@ -42,6 +42,9 @@ class Supplier:
     def load(self, input_file):
         pass
 
+    def update_own_store(self, own_store_dict, new_products_dict):
+        pass
+
     def get_store(self):
         return self._store
 

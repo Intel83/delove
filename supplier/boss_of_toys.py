@@ -12,6 +12,18 @@ class Boss(Supplier):
     }
     _file_url = "http://bossoftoys.pl/images/products/xml/5658fd03-869d-4fd8-bb5d-db680a7071ac.xml"
     _rgx_product = re.compile("<Record>(.*?)</Record>", re.DOTALL)
+    _conversion_map = (
+        "kod",  # valid
+        "ean",  # valid
+        "availability",
+        "delivery_week",
+        "nazwa",    # valid
+        "package_weight",   # valid
+        "cena_netto",   # valid
+        "description",  # valid
+        "detailed_text",    # valid
+        "ean"   # valid
+    )
     supplier_name = "boss_of_toys"
     prefix_code = "42"
 
