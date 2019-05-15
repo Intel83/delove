@@ -3,8 +3,7 @@ from .product_update import ProductUpdate
 
 class NewProduct(ProductUpdate):
     __eur_to_pln_rate = 4.4
-    __content_pattern = """
-<Produkt>
+    __content_pattern = """<Produkt>
     <Kategoria><![CDATA[Nowe]]></Kategoria>
     <Ilosc_produktow>0</Ilosc_produktow>
     <Kod_ean><![CDATA[brak]]></Kod_ean>
@@ -26,8 +25,7 @@ class NewProduct(ProductUpdate):
     <Opis><![CDATA[{}]]></Opis>
     <Opis_krotki><![CDATA[{}]]></Opis_krotki>
     <Nr_katalogowy>{}</Nr_katalogowy>
-</Produkt>\n
-"""
+</Produkt>"""
 
     def __init__(self):
         super(NewProduct, self).__init__()

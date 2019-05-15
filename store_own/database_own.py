@@ -38,7 +38,7 @@ class Store:
         return self.__content
 
     def get_new_products_dict(self):
-        return self.__content
+        return self.__content_new
 
     def download_own_store(self):
         db = None
