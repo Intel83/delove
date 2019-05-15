@@ -46,6 +46,9 @@ class ProductUpdate:
     def get_sku(self):
         return self._properties[self.props[0]]
 
+    def get_quant(self):
+        return self._properties[self.props[2]]
+
     def get_xml(self):
         return self._xml_form
 

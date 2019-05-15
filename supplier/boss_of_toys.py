@@ -1,5 +1,4 @@
 import re
-from datetime import datetime
 from .supplier import Supplier
 from .boss_of_toys_excl import boss_of_toys_exclusions as exclusions
 from store_own.product_new import NewProduct
@@ -8,11 +7,6 @@ from store_own.product_update import ProductUpdate
 
 class Boss(Supplier):
     __rgx_field = re.compile(r"<(?P<name>[\w_]+)>(?P<value>.*?)</\1>", re.DOTALL)
-    # __orion_prefices = {
-    #     "40",
-    #     "42",
-    #     "48"
-    # }
     __code_prefixes = {
         "Obsessive": "49-",
         "Orion": "42-",
@@ -20,20 +14,20 @@ class Boss(Supplier):
     _file_url = "http://bossoftoys.pl/images/products/xml/5658fd03-869d-4fd8-bb5d-db680a7071ac.xml"
     _rgx_product = re.compile("<Record>(.*?)</Record>", re.DOTALL)
     _conversion_map = (
-        "kod",  # valid
-        "ean",  # valid
+        "kod",
+        "ean",
         "availability",
         "delivery_week",
-        "nazwa",    # valid
-        "package_weight",   # valid
-        "cena_netto",   # valid
-        "description",  # valid
-        "detailed_text",    # valid
-        "ean",   # valid
-        "supplier"
+        "nazwa",
+        "package_weight",
+        "cena_netto",
+        "description",
+        "detailed_text",
+        "ean",
+        "supplier",
+        "stan_boss"
     )
     supplier_name = "boss_of_toys"
-    # prefix_code = "42"
 
     def __init__(self):
         Supplier.__init__(self)
@@ -54,10 +48,6 @@ class Boss(Supplier):
                         new_product[field_name] = field[1]
                 try:
                     code = new_product["kod"]
-                    # if not any([code.startswith(prefix) for prefix in self.__code_prefixes.values()]):
-                    #     print(
-                    #         "Produkt \"code\": {} nie jest z Orion i Obsessive. Pomijam.".format(str(code)))
-                    #     continue
                 except KeyError:
                     err_out.write("Produkt nie ma pola \"code\": {}\n".format(str(product)))
                     code = ""
@@ -93,23 +83,24 @@ class Boss(Supplier):
                         prod_ean
                     )
                 )
-                # own_store_dict[prod_ean] = ProductUpdate()
-                # sku = "{}-{}".format(self.get_prefix(), prod_fields[self._conversion_map[0]])
-                # is_available = True if prod_fields[self._conversion_map[1]] == "1" else False
-                # quant = "100" if is_available else "0"
-                # avail = "Dostępny" if is_available else "Zapytaj o dostępność"
-                # try:
-                #     date = "Do 7 dni" if is_available else "od {}".format(
-                #         str(datetime.strptime(prod_fields[self._conversion_map[2]] + "-1", "%W/%Y-%w"))[:10]
-                #     )
-                # except KeyError:
-                #     date = "Brak informacji"
-                #     print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
-                #         prod_ean,
-                #         prod_fields[self._conversion_map[1]],
-                #         date
-                #     ))
-                # own_store_dict[prod_ean].set_props((sku, prod_ean, quant, avail, date))
+                initial_quantity = own_store_dict[prod_ean].get_quant()
+                own_store_dict[prod_ean] = ProductUpdate()
+                supplier = prod_fields[self._conversion_map[10]]
+                quantity = int(float(prod_fields[self._conversion_map[11]]))
+                quant = 0
+                avail = "Niedostępny"
+                date = "BRAK"
+                if quantity > 0:
+                    avail = "Dostępny"
+                    date = "24h"
+                    if supplier == "Orion":
+                        quant = quantity + initial_quantity
+                    else:
+                        quant = 100
+                elif supplier != "Orion":
+                    avail = "Niedostępny"
+                    date = "BRAK"
+                own_store_dict[prod_ean].set_props((complex_key[0], prod_ean, quant, avail, date))
             else:
                 if self.__code_prefixes["Orion"] in prod_fields[self._conversion_map[0]]:
                     print(

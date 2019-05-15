@@ -2,6 +2,12 @@ import pymysql
 from .re_structure import *
 from collections import OrderedDict
 
+supplier_prefixes = {
+        "Obsessive": "11-",
+        "Orion": "10-",
+        "default": "25-"
+    }
+
 
 class Store:
     __tag_file = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
