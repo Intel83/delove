@@ -7,6 +7,7 @@ from store_own.product_update import ProductUpdate
 
 
 class Orion(Supplier):
+    __eur_to_pln_rate = 4.4
     __rgx = {
         "product-id": re.compile(r"product-id=\"(\d+)\""),
         "product-group-id": re.compile(r"product-group-id=\"(\d+)\""),
@@ -40,7 +41,6 @@ class Orion(Supplier):
     _rgx_product = re.compile("<product (.*?)</product>", re.DOTALL)
     _conversion_map = (
         "product-id",
-        # "ean-code",
         "availability",
         "delivery_week",
         "name",
@@ -48,7 +48,6 @@ class Orion(Supplier):
         "list-price",
         "full_text",
         "detailed_text",
-        "barcode"
     )
     supplier_name = "orion"
     prefix_code = "10"
@@ -84,7 +83,6 @@ class Orion(Supplier):
         print("Z pliku dostawcy wczytano {} produktów.".format(len(self._store)))
         print("Z pliku dostawcy wykluczono {} produktów.".format(exclusions_applied))
 
-    # TEST
     def update_own_store(self, own_store_dict, new_products_dict):
         supplier_products_in_own_store = len(
             {product for product in own_store_dict.values() if self.is_supplying(product)}
@@ -117,14 +115,14 @@ class Orion(Supplier):
                     )
                 except KeyError:
                     date = "Brak informacji"
-                    print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\"".format(
+                    print("EAN: {} dostępność: {}. Brak pola delivery_week. Używam \"{}\".".format(
                         prod_ean,
                         prod_fields[self._conversion_map[1]],
                         date
                     ))
                 own_store_dict[prod_ean].set_props((sku, prod_ean, quant, avail, date))
             else:
-                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów".format(prod_ean))
+                print("EAN: {} nie znajduje się w bazie delove. Dodaję do spisu nowych produktów.".format(prod_ean))
                 new_products_dict[prod_ean] = NewProduct()
                 full_text = detailed_text = ""
                 try:
@@ -135,13 +133,15 @@ class Orion(Supplier):
                     detailed_text = prod_fields[self._conversion_map[7]]
                 except KeyError:
                     print("Produkt {} nie ma angielskiego opisu skróconego. Zostawiam puste.".format(prod_ean))
+                sku = prod_fields[self._conversion_map[0]]
                 new_products_dict[prod_ean].set_props((
+                    "Orion",
                     prod_fields[self._conversion_map[3]],
                     prod_fields[self._conversion_map[4]],
-                    prod_fields[self._conversion_map[5]],
+                    float(prod_fields[self._conversion_map[5]]) * 1.19 * 2 * self.__eur_to_pln_rate,
                     full_text,
                     detailed_text,
-                    prod_fields[self._conversion_map[0]],
+                    sku[:7] if sku[0] != "0" else sku[1:7],
                 ))
 
         print("W bazie delove jest {} produktów tego dostawcy.".format(supplier_products_in_own_store))
