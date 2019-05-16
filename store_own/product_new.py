@@ -6,7 +6,7 @@ class NewProduct(ProductUpdate):
     <Kategoria><![CDATA[Nowe]]></Kategoria>
     <Ilosc_produktow>0</Ilosc_produktow>
     <Kod_ean><![CDATA[brak]]></Kod_ean>
-    <Podatek_Vat>23</Podatek_Vat>
+    <Podatek_Vat>{}</Podatek_Vat>
     <Nowosc>tak</Nowosc>
     <Do_porownywarek>tak</Do_porownywarek>
     <Negocjacja>tak</Negocjacja>
@@ -29,6 +29,7 @@ class NewProduct(ProductUpdate):
     def __init__(self):
         super(NewProduct, self).__init__()
         self.props = (
+            "Podatek_Vat",
             "Producent",
             "Nazwa_produktu",
             "Waga",
@@ -47,17 +48,19 @@ class NewProduct(ProductUpdate):
             self._properties[self.props[4]],
             self._properties[self.props[5]],
             self._properties[self.props[6]],
+            self._properties[self.props[7]],
         )
         self._xml_form = content
 
     def set_props(self, product_tuple):
         self._properties[self.props[0]] = product_tuple[0]
         self._properties[self.props[1]] = product_tuple[1]
-        self._properties[self.props[2]] = float(product_tuple[2]) / 1000
-        self._properties[self.props[3]] = product_tuple[3]
+        self._properties[self.props[2]] = product_tuple[2]
+        self._properties[self.props[3]] = float(product_tuple[3]) / 1000
         self._properties[self.props[4]] = product_tuple[4]
         self._properties[self.props[5]] = product_tuple[5]
         self._properties[self.props[6]] = product_tuple[6]
+        self._properties[self.props[7]] = product_tuple[7]
         self._build_xml()
 
     def void_product(self):

@@ -135,6 +135,7 @@ class Orion(Supplier):
                     print("Produkt {} nie ma angielskiego opisu skróconego. Zostawiam puste.".format(prod_ean))
                 sku = prod_fields[self._conversion_map[0]]
                 new_products_dict[prod_ean].set_props((
+                    "23",
                     "Orion",
                     prod_fields[self._conversion_map[3]],
                     prod_fields[self._conversion_map[4]],

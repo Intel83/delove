@@ -25,7 +25,8 @@ class Boss(Supplier):
         "detailed_text",
         "ean",
         "supplier",
-        "stan_boss"
+        "stan_boss",
+        "stawka_vat"
     )
     supplier_name = "boss_of_toys"
 
@@ -63,7 +64,7 @@ class Boss(Supplier):
                     continue
                 if complex_key not in self._store.keys():
                     # TEST
-                    new_product["supplier"] = "default"
+                    new_product["supplier"] = "Nowy"
                     for supplier, prefix in self.__code_prefixes.items():
                         if prefix in code:
                             new_product["supplier"] = supplier
@@ -115,11 +116,15 @@ class Boss(Supplier):
                     detailed_text = prod_fields[self._conversion_map[8]]
                 except KeyError:
                     print("Produkt {} nie ma angielskiego opisu skróconego. Zostawiam puste.".format(prod_ean))
-                try:
-                    code_suffix = prod_fields[self._conversion_map[0]].split("-")[1]
-                except IndexError:
+                if self.__code_prefixes["Obsessive"] in prod_fields[self._conversion_map[0]]:
+                    try:
+                        code_suffix = prod_fields[self._conversion_map[0]].split("-")[1]
+                    except IndexError:
+                        code_suffix = prod_fields[self._conversion_map[0]]
+                else:
                     code_suffix = prod_fields[self._conversion_map[0]]
                 new_products_dict[prod_ean].set_props((
+                    int(prod_fields[self._conversion_map[11]]),
                     prod_fields[self._conversion_map[10]],
                     prod_fields[self._conversion_map[4]],
                     "500",
