@@ -7,11 +7,11 @@ class ProductUpdate:
     tag_open = "<{}>"
     tag_close = "</{}>"
     props = (
-       "Nr_katalogowy_cechy",
-       "Kod_ean_cechy",
-       "Ilosc_produktow",
-       "Dostepnosc",
-       "Termin_wysylki",
+        "Nr_katalogowy_cechy",
+        "Kod_ean_cechy",
+        "Ilosc_produktow",
+        "Dostepnosc",
+        "Termin_wysylki",
     )
 
     def __init__(self):
@@ -48,6 +48,12 @@ class ProductUpdate:
 
     def get_quant(self):
         return self._properties[self.props[2]]
+
+    def get_avail(self):
+        return self._properties[self.props[3]]
+
+    def gat_date(self):
+        return self._properties[self.props[4]]
 
     def get_xml(self):
         return self._xml_form
