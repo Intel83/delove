@@ -124,7 +124,7 @@ class Boss(Supplier):
                 else:
                     code_suffix = prod_fields[self._conversion_map[0]]
                 new_products_dict[prod_ean].set_props((
-                    int(prod_fields[self._conversion_map[11]]),
+                    int(float(prod_fields[self._conversion_map[11]])),
                     prod_fields[self._conversion_map[10]],
                     prod_fields[self._conversion_map[4]],
                     "500",
