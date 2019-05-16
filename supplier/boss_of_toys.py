@@ -84,6 +84,7 @@ class Boss(Supplier):
                     )
                 )
                 initial_quantity = own_store_dict[prod_ean].get_quant()
+                sku = own_store_dict[prod_ean].get_sku()
                 own_store_dict[prod_ean] = ProductUpdate()
                 supplier = prod_fields[self._conversion_map[10]]
                 quantity = int(float(prod_fields[self._conversion_map[11]]))
@@ -100,7 +101,7 @@ class Boss(Supplier):
                 elif supplier != "Orion":
                     avail = "Niedostępny"
                     date = "BRAK"
-                own_store_dict[prod_ean].set_props((complex_key[0], prod_ean, quant, avail, date))
+                own_store_dict[prod_ean].set_props((sku, prod_ean, quant, avail, date))
             else:
                 if self.__code_prefixes["Orion"] in prod_fields[self._conversion_map[0]]:
                     print(
