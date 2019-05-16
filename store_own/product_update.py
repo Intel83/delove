@@ -52,7 +52,7 @@ class ProductUpdate:
     def get_avail(self):
         return self._properties[self.props[3]]
 
-    def gat_date(self):
+    def get_date(self):
         return self._properties[self.props[4]]
 
     def get_xml(self):
