@@ -86,8 +86,12 @@ class Boss(Supplier):
                 )
                 quantity = int(float(prod_fields[self._conversion_map[11]]))
                 if prod_fields[self._conversion_map[10]] == "Orion":
-                    avail = own_store_dict[prod_ean].get_avail()
-                    date = "24h" if quantity > 0 else own_store_dict[prod_ean].get_date()
+                    if quantity > 0:
+                        avail = "Dostępny"
+                        date = "24h"
+                    else:
+                        avail = own_store_dict[prod_ean].get_avail()
+                        date = own_store_dict[prod_ean].get_date()
                     quantity += own_store_dict[prod_ean].get_quant()
                 else:
                     if quantity > 0:
