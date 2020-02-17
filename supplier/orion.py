@@ -36,13 +36,9 @@ class Orion(Supplier):
     }
     __rgx_attr = re.compile("<attribute name=\"(.+?)\" (.+?)</attribute>", re.DOTALL)
     __rgx_value = re.compile("<value </value>")
+    __file_url_prefix = "https://www.orion-grosshandel.de/assets/restricted/downloads/productdata_v4_03_02.xml"
     __token = "download_token=180315-l3qhn5ggmpdtw8y8zijv88o45"
-    _file_url = "https://www.orion-wholesale.com/assets/restricted/downloads/productdata_v4_02_01.xml?{}".format(
-        __token
-    )
-    # _file_url = "https://www.orion-grosshandel.de/assets/restricted/downloads/productdata_v4_03_02.xml\\?{}".format(
-    #     __token
-    # )
+    _file_url = "{}?{}".format(__file_url_prefix, __token)
     _rgx_product = re.compile("<product (.*?)</product>", re.DOTALL)
     _conversion_map = (
         "product-id",
